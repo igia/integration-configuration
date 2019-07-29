@@ -1,0 +1,41 @@
+{
+    "name": "DestinationFilter",
+    "fields": [
+        {
+            "fieldName": "filterOrder",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "filterType",
+            "fieldType": "FilterType",
+            "fieldValues": "JAVASCRIPT"
+        },
+        {
+            "fieldName": "data",
+            "fieldType": "byte[]",
+            "fieldTypeBlobContent": "text"
+        },
+        {
+            "fieldName": "description",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipName": "destinationEndpoint",
+            "otherEntityName": "destinationEndpoint",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20181019121600",
+    "entityTableName": "destination_filter",
+    "dto": "mapstruct",
+    "pagination": "no",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "integrationconfiguration",
+    "applications": "*",
+    "microserviceName": "integrationconfiguration"
+}

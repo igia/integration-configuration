@@ -1,0 +1,54 @@
+{
+    "name": "SourceEndpoint",
+    "fields": [
+        {
+            "fieldName": "type",
+            "fieldType": "EndpointType",
+            "fieldValues": "MLLP,FILE"
+        },
+        {
+            "fieldName": "name",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "inDataType",
+            "fieldType": "InDataType",
+            "fieldValues": "HL7_V2"
+        },
+        {
+            "fieldName": "outDataType",
+            "fieldType": "OutDataType",
+            "fieldValues": "HL7_V2"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "filter",
+            "otherEntityName": "sourceFilter",
+            "otherEntityRelationshipName": "sourceEndpoint"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "transformer",
+            "otherEntityName": "sourceTransformer",
+            "otherEntityRelationshipName": "sourceEndpoint"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "configuration",
+            "otherEntityName": "sourceConfig",
+            "otherEntityRelationshipName": "sourceEndpoint"
+        }
+    ],
+    "changelogDate": "20181019121555",
+    "entityTableName": "source_endpoint",
+    "dto": "mapstruct",
+    "pagination": "no",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "integrationconfiguration",
+    "applications": "*",
+    "microserviceName": "integrationconfiguration"
+}

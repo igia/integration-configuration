@@ -1,0 +1,126 @@
+[
+{
+  
+  "description" : "This interface receives a claims CSV file. It then filters patients who had heart failure and create a csv file containing patient id and icd code.",
+  "deploy" : false,
+  "workerService" : "INTEGRATIONWORKER-I",
+  "reason" : null,
+  "source" : {
+    "type" : "SFTP",
+    "name" : "SFTP Source",
+    "inDataType" : "CSV",
+    "outDataType" : "CSV",
+    "configurations" : [ {
+      "key" : "password",
+      "value" : "passpass"
+    }, {
+      "key" : "directoryName",
+      "value" : "public/integration"
+    }, {
+      "key" : "fileName",
+      "value" : "outpatient_claims_data.csv"
+    }, {
+      "key" : "delay",
+      "value" : "6000000"
+    }, {
+      "key" : "hostname",
+      "value" : "vega1sftp.centralindia.cloudapp.azure.com"
+    }, {
+      "key" : "port",
+      "value" : "1212"
+    }, {
+      "key" : "username",
+      "value" : "dev"
+    } ],
+    "filters" : [ {
+      "order" : 0,
+      "type" : "JAVASCRIPT",
+      "data" : "request.getBody()[0][12] === 'ICD9_DGNS_CD_1' || request.getBody()[0][12] === 'V428'",
+      "description" : "This filters patients who had heart failure."
+    } ],
+    "transformers" : [ ]
+  },
+  "destinations" : [ {
+    "type" : "FILE",
+    "name" : "File Destination",
+    "inDataType" : "CSV",
+    "outDataType" : "CSV",
+    "configurations" : [ {
+      "key" : "directoryName",
+      "value" : "fromSFTP"
+    }, {
+      "key" : "fileName",
+      "value" : "outepatinet_data.csv"
+    } ],
+    "filters" : [ ],
+    "transformers" : [ {
+      "order" : 0,
+      "type" : "JAVASCRIPT",
+      "data" : "var logger = org.slf4j.LoggerFactory.getLogger(exchange.getFromRouteId()); var body = request.getBody(); var data = body[0].toString(); data = data.substring(1,data.length); data = data.split(\",\"); var pid = data[0]; var icd = data[12]; var content = []; content.push(pid); content.push(icd); logger.info (\"Result {}\", content); result = content;",
+      "description" : "Extract only Patient id and ICD code 9 "
+    } ]
+  } ]
+},
+{
+ 
+  "description" : "This interface receives a claims CSV file. It then filters patients who had heart failure and create a csv file containing patient id and icd code.",
+  "deploy" : false,
+  "workerService" : "INTEGRATIONWORKER-I",
+  "reason" : null,
+  "source" : {
+    "type" : "SFTP",
+    "name" : "SFTP Source",
+    "inDataType" : "CSV",
+    "outDataType" : "CSV",
+    "configurations" : [ {
+      "key" : "password",
+      "value" : "passpass"
+    }, {
+      "key" : "directoryName",
+      "value" : "public/integration"
+    }, {
+      "key" : "fileName",
+      "value" : "outpatient_claims_data.csv"
+    }, {
+      "key" : "delay",
+      "value" : "6000000"
+    }, {
+      "key" : "hostname",
+      "value" : "vega1sftp.centralindia.cloudapp.azure.com"
+    }, {
+      "key" : "port",
+      "value" : "1212"
+    }, {
+      "key" : "username",
+      "value" : "dev"
+    } ],
+    "filters" : [ {
+      "order" : 0,
+      "type" : "JAVASCRIPT",
+      "data" : "request.getBody()[0][12] === 'ICD9_DGNS_CD_1' || request.getBody()[0][12] === 'V428'",
+      "description" : "This filters patients who had heart failure."
+    } ],
+    "transformers" : [ ]
+  },
+  "destinations" : [ {
+    "type" : "FILE",
+    "name" : "File Destination",
+    "inDataType" : "CSV",
+    "outDataType" : "CSV",
+    "configurations" : [ {
+      "key" : "directoryName",
+      "value" : "fromSFTP"
+    }, {
+      "key" : "fileName",
+      "value" : "outepatinet_data.csv"
+    } ],
+    "filters" : [ ],
+    "transformers" : [ {
+      "order" : 0,
+      "type" : "JAVASCRIPT",
+      "data" : "var logger = org.slf4j.LoggerFactory.getLogger(exchange.getFromRouteId()); var body = request.getBody(); var data = body[0].toString(); data = data.substring(1,data.length); data = data.split(\",\"); var pid = data[0]; var icd = data[12]; var content = []; content.push(pid); content.push(icd); logger.info (\"Result {}\", content); result = content;",
+      "description" : "Extract only Patient id and ICD code 9 "
+    } ]
+  } ]
+}
+]

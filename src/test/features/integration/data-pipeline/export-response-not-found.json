@@ -1,0 +1,9 @@
+{
+    "type": "https://www.jhipster.tech/problem/parameterized",
+    "title": "Parameterized Exception",
+    "status": 400,
+    "message": "Data not found",
+    "params": {
+        "param0": "Data not found"
+    }
+}

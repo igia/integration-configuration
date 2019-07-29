@@ -1,0 +1,5 @@
+id,igia_type,category,property,is_encrypted,is_mandatory,created_date,created_by,modified_date,modified_by
+1,MLLP,SOURCE,hostname,false,true,2018-10-23T00:00:00.000Z,jhipster,2018-10-23T00:00:00.000Z,jhipster
+2,MLLP,SOURCE,port,false,true,2018-10-23T00:00:00.000Z,jhipster,2018-10-23T00:00:00.000Z,jhipster
+3,FILE,DESTINATION,directoryName,false,true,2018-10-23T00:00:00.000Z,jhipster,2018-10-23T00:00:00.000Z,jhipster
+4,FILE,DESTINATION,fileName,false,true,2018-10-23T00:00:00.000Z,jhipster,2018-10-23T00:00:00.000Z,jhipster

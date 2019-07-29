@@ -1,0 +1,13 @@
+id,igia_type,category,property,is_encrypted,is_mandatory,created_date,created_by,modified_date,modified_by
+23,HTTP,SOURCE,hostname,false,true,2019-01-07T00:00:00.000Z,jhipster,2019-01-07T00:00:00.000Z,jhipster
+24,HTTP,SOURCE,port,false,true,2019-01-07T00:00:00.000Z,jhipster,2019-01-07T00:00:00.000Z,jhipster
+25,HTTP,SOURCE,resourceUri,false,true,2019-01-07T00:00:00.000Z,jhipster,2019-01-07T00:00:00.000Z,jhipster
+26,HTTP,DESTINATION,hostname,false,true,2019-01-07T00:00:00.000Z,jhipster,2019-01-07T00:00:00.000Z,jhipster
+27,HTTP,DESTINATION,port,false,true,2019-01-07T00:00:00.000Z,jhipster,2019-01-07T00:00:00.000Z,jhipster
+28,HTTP,DESTINATION,resourceUri,false,true,2019-01-07T00:00:00.000Z,jhipster,2019-01-07T00:00:00.000Z,jhipster
+29,HTTPS,SOURCE,hostname,false,true,2019-01-07T00:00:00.000Z,jhipster,2019-01-07T00:00:00.000Z,jhipster
+30,HTTPS,SOURCE,port,false,true,2019-01-07T00:00:00.000Z,jhipster,2019-01-07T00:00:00.000Z,jhipster
+31,HTTPS,SOURCE,resourceUri,false,true,2019-01-07T00:00:00.000Z,jhipster,2019-01-07T00:00:00.000Z,jhipster
+32,HTTPS,DESTINATION,hostname,false,true,2019-01-07T00:00:00.000Z,jhipster,2019-01-07T00:00:00.000Z,jhipster
+33,HTTPS,DESTINATION,port,false,true,2019-01-07T00:00:00.000Z,jhipster,2019-01-07T00:00:00.000Z,jhipster
+34,HTTPS,DESTINATION,resourceUri,false,true,2019-01-07T00:00:00.000Z,jhipster,2019-01-07T00:00:00.000Z,jhipster

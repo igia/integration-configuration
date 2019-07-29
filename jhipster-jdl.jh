@@ -1,0 +1,118 @@
+
+
+enum State {
+	READY, START, STOP, FAILED
+}
+
+enum EndpointType {
+	MLLP, FILE
+}
+
+enum FilterType {
+	JAVASCRIPT
+}
+enum TransformerType {
+	JAVASCRIPT
+}
+
+enum InDataType {
+  HL7_V2
+}
+
+enum OutDataType {
+  HL7_V2
+}
+
+entity DataPipeline {
+	name String, 
+    description String, 
+    deploy Boolean, 
+    version String,
+    state State,
+    workerService String,
+    createdDate Instant, 
+    createdBy String, 
+    modifiedDate Instant, 
+    modifiedBy String
+}
+
+entity SourceEndpoint {
+	type EndpointType,
+    name String, 
+    inDataType InDataType, 
+    outDataType OutDataType
+}
+
+entity DestinationEndpoint {
+	type EndpointType,
+    name String, 
+    inDataType InDataType, 
+    outDataType OutDataType
+}
+
+entity SourceConfig {
+	configKey String, 
+    configValue String
+}
+
+entity DestinationConfig {
+	configKey String, 
+    configValue String
+}
+
+entity SourceFilter {
+	filterOrder Integer,
+    filterType FilterType,
+    data TextBlob,
+    description String
+}
+
+entity DestinationFilter {
+	filterOrder Integer,
+    filterType FilterType,
+    data TextBlob,
+    description String
+}
+
+entity SourceTransformer {
+	transformerOrder Integer,
+    transformerType TransformerType,
+    data TextBlob,
+    description String
+}
+
+entity DestinationTransformer {
+	transformerOrder Integer,
+    transformerType TransformerType,
+    data TextBlob,
+    description String
+}
+
+entity EndpointMetadata{
+  type String,
+  category String, 
+  property String,
+  isEncrypted Boolean, 
+  isMandatory Boolean
+}
+
+relationship OneToOne {
+	DataPipeline{source} to SourceEndpoint
+}
+
+relationship OneToMany { 
+	DataPipeline{destination} to DestinationEndpoint,
+    SourceEndpoint{filter} to SourceFilter , 
+    SourceEndpoint{transformer} to SourceTransformer,
+    SourceEndpoint{configuration} to SourceConfig,
+    DestinationEndpoint{filter} to DestinationFilter,
+    DestinationEndpoint{transformer} to DestinationTransformer,
+    DestinationEndpoint{configuration} to DestinationConfig
+}
+
+dto * with mapstruct
+service all with serviceImpl
+
+
+
+

@@ -1,0 +1,14 @@
+id,igia_type,category,property,is_encrypted,is_mandatory,created_date,created_by,modified_date,modified_by
+57,MLLP,SOURCE,maxConcurrentConsumers,false,false,2019-02-06T00:00:00.000Z,jhipster,2019-02-06T00:00:00.000Z,jhipster
+58,MLLP,SOURCE,idleTimeout,false,false,2019-02-06T00:00:00.000Z,jhipster,2019-02-06T00:00:00.000Z,jhipster
+59,MLLP,SOURCE,requireEndOfData,false,false,2019-02-06T00:00:00.000Z,jhipster,2019-02-06T00:00:00.000Z,jhipster
+60,MLLP,SOURCE,validatePayload,false,false,2019-02-06T00:00:00.000Z,jhipster,2019-02-06T00:00:00.000Z,jhipster
+61,MLLP,SOURCE,backlog,false,false,2019-02-06T00:00:00.000Z,jhipster,2019-02-06T00:00:00.000Z,jhipster
+62,MLLP,DESTINATION,connectTimeout,false,false,2019-02-06T00:00:00.000Z,jhipster,2019-02-06T00:00:00.000Z,jhipster
+63,HTTP,SOURCE,enableCORS,false,false,2019-02-06T00:00:00.000Z,jhipster,2019-02-06T00:00:00.000Z,jhipster
+64,HTTP,SOURCE,sessionSupport,false,false,2019-02-06T00:00:00.000Z,jhipster,2019-02-06T00:00:00.000Z,jhipster
+65,HTTP,DESTINATION,httpMethod,false,false,2019-02-06T00:00:00.000Z,jhipster,2019-02-06T00:00:00.000Z,jhipster
+66,HTTP,DESTINATION,authMethod,false,false,2019-02-06T00:00:00.000Z,jhipster,2019-02-06T00:00:00.000Z,jhipster
+67,HTTP,DESTINATION,authPassword,false,false,2019-02-06T00:00:00.000Z,jhipster,2019-02-06T00:00:00.000Z,jhipster
+68,HTTP,DESTINATION,authUsername,false,false,2019-02-06T00:00:00.000Z,jhipster,2019-02-06T00:00:00.000Z,jhipster
+69,FILE,DESTINATION,fileExist,false,false,2019-02-27T00:00:00.000Z,jhipster,2019-02-27T00:00:00.000Z,jhipster

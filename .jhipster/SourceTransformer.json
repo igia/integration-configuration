@@ -1,0 +1,41 @@
+{
+    "name": "SourceTransformer",
+    "fields": [
+        {
+            "fieldName": "transformerOrder",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "transformerType",
+            "fieldType": "TransformerType",
+            "fieldValues": "JAVASCRIPT"
+        },
+        {
+            "fieldName": "data",
+            "fieldType": "byte[]",
+            "fieldTypeBlobContent": "text"
+        },
+        {
+            "fieldName": "description",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipName": "sourceEndpoint",
+            "otherEntityName": "sourceEndpoint",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20181019121601",
+    "entityTableName": "source_transformer",
+    "dto": "mapstruct",
+    "pagination": "no",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "integrationconfiguration",
+    "applications": "*",
+    "microserviceName": "integrationconfiguration"
+}

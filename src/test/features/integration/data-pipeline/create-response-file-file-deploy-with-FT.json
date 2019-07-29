@@ -1,0 +1,106 @@
+{
+    "id" : "#number",
+    "name" : "A02 registration",
+    "description" : "sample integration pipeline to route A01 messages",
+    "deploy" : true,
+    "version" : "#number",
+    "state" : "STARTING",
+    "reason" : null,
+    "workerService" : "INTEGRATIONWORKER-I",
+    "createdOn" : "#string",
+    "createdBy" : "service-account-internal",
+    "modifiedOn" : "#string",
+    "modifiedBy" : "service-account-internal",
+    "source" : {
+        "id" : "#number",
+        "type": "FILE",
+        "name": "#string",
+        "inDataType": "CSV",
+        "outDataType": "CSV",
+        "configurations" : [ {
+            "id" : "#number",
+            "key": "directoryName",
+            "value": "/home/igia/Documents/files"
+        }, {
+            "id" : "#number",
+            "key": "fileName",
+            "value": "data_001.csv"
+        } ],
+        "filters" :  [ {
+            "id" : "#number",
+            "order" : 0,
+            "type" : "JAVASCRIPT",
+            "data" : "sample filter expression:1",
+            "description" : "sample source filter:1"
+        },{
+            "id" : "#number",
+            "order" : 1,
+            "type" : "JAVASCRIPT",
+            "data" : "sample filter expression:2",
+            "description" : "sample source filter:2"
+        } ],
+        "transformers" :  [ {
+            "id" : "#number",
+            "order" : 0,
+            "type" : "JAVASCRIPT",
+            "data" : "sample transformation expression:1",
+            "description" : "sample source transformation:1"
+        },{
+            "id" : "#number",
+            "order" : 1,
+            "type" : "JAVASCRIPT",
+            "data" : "sample transformation expression:2",
+            "description" : "sample source transformation:2"
+        } ]
+    },
+    "destinations" : [ {
+        "id" : "#number",
+        "type" : "FILE",
+        "name" : "#string",
+        "inDataType" : "HL7_V2",
+        "outDataType" : "HL7_V2",
+        "configurations" : [ {
+            "id" : "#number",
+            "key" : "fileName",
+            "value" : "a01.hl7"
+        }, {
+            "id" : "#number",
+            "key" : "directoryName",
+            "value" : "/home/test"
+        } ],
+        "filters" : [ {
+            "id" : "#number",
+            "order" : 0,
+            "type" : "JAVASCRIPT",
+            "data" : "sample filter expression:1",
+            "description" : "sample source filter:1"
+        },{
+            "id" : "#number",
+            "order" : 1,
+            "type" : "JAVASCRIPT",
+            "data" : "sample filter expression:2",
+            "description" : "sample source filter:2"
+        } ],
+        "transformers" : [ {
+            "id" : "#number",
+            "order" : 0,
+            "type" : "JAVASCRIPT",
+            "data" : "sample transformation expression:1",
+            "description" : "sample source transformation:1"
+        },{
+            "id" : "#number",
+            "order" : 1,
+            "type" : "JAVASCRIPT",
+            "data" : "sample transformation expression:2",
+            "description" : "sample source transformation:2"
+        } ],
+        "responseTransformers" : [{
+            "id" : "#number",
+            "order" : 1,
+            "type" : "JAVASCRIPT",
+            "data" : "sample transformation expression:3",
+            "description" : "sample source transformation:3"
+        }]
+    } ],
+    "auditMessages": ["ALL"]
+}

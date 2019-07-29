@@ -1,0 +1,12 @@
+enum AuditMessageEventType {
+   ALL, ERROR, FILTERED
+}
+
+entity DataPipelineAuditMessageEventType {
+  dataPipelineId Long,
+  eventType AuditMessageEventType,
+  deleted Boolean
+}
+
+dto * with mapstruct
+service all with serviceImpl

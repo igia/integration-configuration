@@ -1,0 +1,120 @@
+{
+    "failure": [],
+    "success": [
+        {
+            "dataPipeline": {
+                "id": "#number",
+                "name": "UnDeployed_Pipeline_with_FT_RAW_Support",
+                "description": "MLLP to FILE and RAW to RAW",
+                "deploy": false,
+                "version": "#number",
+                "state": "READY",
+                "workerService": "INTEGRATIONWORKER-I",
+                "createdOn": "#string",
+                "createdBy": "service-account-internal",
+                "modifiedOn": "#string",
+                "modifiedBy": "service-account-internal",
+                "reason": null,
+                "source": {
+                    "id": "#number",
+                    "type": "MLLP",
+                    "name": "Source Hospital",
+                    "inDataType": "RAW",
+                    "outDataType": "RAW",
+                    "configurations": [
+                        {
+                            "id": "#number",
+                            "key": "hostname",
+                            "value": "localhost"
+                        },
+                        {
+                            "id": "#number",
+                            "key": "port",
+                            "value": "2065"
+                        }
+                    ],
+                    "filters": [
+                        {
+                            "id": "#number",
+                            "order": 1,
+                            "type": "JAVASCRIPT",
+                            "data": "request.getBody().toString().indexOf(\"ADT\") > -1",
+                            "description": "sample source filter"
+                        }
+                    ],
+                    "transformers": [
+                        {
+                            "id": "#number",
+                            "order": 0,
+                            "type": "JAVASCRIPT",
+                            "data": "var msg = exchange.getIn().getBody(Java.type(\"ca.uhn.hl7v2.model.v26.message.ADT_A01\").class);var logger = org.slf4j.LoggerFactory.getLogger(exchange.getFromRouteId());logger.info (\"Source tranformer 1 logging ::\", msg);result = request.getBody().toString().toUpperCase();",
+                            "description": "sample source filter"
+                        },
+                        {
+                            "id": "#number",
+                            "order": 1,
+                            "type": "JAVASCRIPT",
+                            "data": "var logger = org.slf4j.LoggerFactory.getLogger(exchange.getFromRouteId());logger.info (\"Source tranformer 2 logging ::\");",
+                            "description": "sample source filter"
+                        }
+                    ]
+                },
+                "destinations": [
+                    {
+                        "id": "#number",
+                        "type": "FILE",
+                        "name": "Shared file",
+                        "inDataType": "RAW",
+                        "outDataType": "RAW",
+                        "configurations": [
+                            {
+                                "id": "#number",
+                                "key": "fileName",
+                                "value": "data_002.xml"
+                            },
+                            {
+                               "id": "#number",
+                                "key": "directoryName",
+                                "value": "home/igia/Documents/files"
+                            }
+                        ],
+                        "filters": [
+                            {
+                                "id": "#number",
+                                "order": 0,
+                                "type": "JAVASCRIPT",
+                                "data": "request.getBody().toString().indexOf(\"ADT\") > -1",
+                                "description": "sample source filter"
+                            },
+                            {
+                                "id": "#number",
+                                "order": 1,
+                                "type": "JAVASCRIPT",
+                                "data": "request.getBody().toString().indexOf(\"ADT\") > -1",
+                                "description": "sample source filter"
+                            }
+                        ],
+                        "transformers": [
+                            {
+                                "id": "#number",
+                                "order": 0,
+                                "type": "JAVASCRIPT",
+                                "data": "var logger = org.slf4j.LoggerFactory.getLogger(exchange.getFromRouteId());logger.info (\"Destination tranformer 1 logging ::\", msg);",
+                                "description": "sample source filter"
+                            },
+                            {
+                                "id": "#number",
+                                "order": 1,
+                                "type": "JAVASCRIPT",
+                                "data": "var logger = org.slf4j.LoggerFactory.getLogger(exchange.getFromRouteId());logger.info (\"Destination tranformer 2 logging ::\", msg);",
+                                "description": "sample source filter"
+                            }
+                        ],
+                        "responseTransformers": []
+                    }
+                ],
+    "auditMessages": ["ALL"]
+            }
+        }
+    ]
+}

@@ -1,0 +1,65 @@
+{
+    "fluentMethods": true,
+    "clientRootFolder": "integrationconfiguration",
+    "relationships": [
+        {
+            "relationshipName": "dataPipeline",
+            "otherEntityName": "dataPipeline",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "filter",
+            "otherEntityName": "destinationFilter",
+            "otherEntityRelationshipName": "destinationEndpoint"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "transformer",
+            "otherEntityName": "destinationTransformer",
+            "otherEntityRelationshipName": "destinationEndpoint"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "configuration",
+            "otherEntityName": "destinationConfig",
+            "otherEntityRelationshipName": "destinationEndpoint"
+        },
+        {
+            "relationshipName": "responseTransformer",
+            "otherEntityName": "responseTransformer",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "destinationEndpoint"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "type",
+            "fieldType": "EndpointType",
+            "fieldValues": "MLLP,FILE"
+        },
+        {
+            "fieldName": "name",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "inDataType",
+            "fieldType": "InDataType",
+            "fieldValues": "HL7_V2"
+        },
+        {
+            "fieldName": "outDataType",
+            "fieldType": "OutDataType",
+            "fieldValues": "HL7_V2"
+        }
+    ],
+    "changelogDate": "20181019121556",
+    "dto": "mapstruct",
+    "searchEngine": false,
+    "service": "serviceImpl",
+    "entityTableName": "destination_endpoint",
+    "jpaMetamodelFiltering": false,
+    "pagination": "no",
+    "microserviceName": "integrationconfiguration"
+}

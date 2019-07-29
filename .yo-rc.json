@@ -1,0 +1,39 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "io.igia.integration.configuration",
+      "nativeLanguage": "en"
+    },
+    "jhipsterVersion": "5.4.2",
+    "applicationType": "microservice",
+    "baseName": "integrationconfiguration",
+    "packageName": "io.igia.integration.configuration",
+    "packageFolder": "io/igia/integration/configuration",
+    "serverPort": "8050",
+    "authenticationType": "oauth2",
+    "cacheProvider": "hazelcast",
+    "enableHibernateCache": true,
+    "websocket": false,
+    "databaseType": "sql",
+    "devDatabaseType": "h2Disk",
+    "prodDatabaseType": "postgresql",
+    "searchEngine": false,
+    "messageBroker": false,
+    "serviceDiscoveryType": "eureka",
+    "buildTool": "maven",
+    "enableSwaggerCodegen": false,
+    "jwtSecretKey": "YzcyNjU0ZjAyZTY0YWE4MGI3ZGQyYThkMzBhZDA2ZTlkZTlhNmNlZmE4ZDhhMWU3NGU3YWE2ZWIxOWM2Njg5MDIzNTczMzZiMTEyNzQ3Y2M1YmUzYTZmOTJlMjJlNGU2OWM1NGU2YmJlZWI4Yzg2ZjBiNDVhZTFiNjdkYzkyZGY=",
+    "enableTranslation": true,
+    "languages": [
+      "en"
+    ],
+    "testFrameworks": [
+      "cucumber"
+    ],
+    "jhiPrefix": "igia",
+    "clientPackageManager": "yarn",
+    "nativeLanguage": "en",
+    "skipClient": true,
+    "skipUserManagement": true
+  }
+}

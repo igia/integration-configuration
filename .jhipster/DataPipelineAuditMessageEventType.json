@@ -1,0 +1,29 @@
+{
+    "name": "DataPipelineAuditMessageEventType",
+    "fields": [
+        {
+            "fieldName": "dataPipelineId",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "eventType",
+            "fieldType": "AuditMessageEventType",
+            "fieldValues": "ALL,ERROR,FILTERED"
+        },
+        {
+            "fieldName": "deleted",
+            "fieldType": "Boolean"
+        }
+    ],
+    "relationships": [],
+    "changelogDate": "20190304061832",
+    "entityTableName": "data_pipeline_audit_message_event_type",
+    "dto": "mapstruct",
+    "pagination": "no",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "integrationconfiguration",
+    "applications": "*",
+    "microserviceName": "integrationconfiguration"
+}

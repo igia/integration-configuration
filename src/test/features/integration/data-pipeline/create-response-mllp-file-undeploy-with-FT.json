@@ -1,0 +1,35 @@
+{
+    "id" : "#number",
+    "name" : "A02 registration",
+    "description" : "sample integration pipeline to route A01 messages",
+    "deploy" : false,
+    "version" : "#number",
+    "state" : "READY",
+    "reason" : null,
+    "workerService" : "INTEGRATIONWORKER-I",
+    "createdOn" : "#string",
+    "createdBy" : "service-account-internal",
+    "modifiedOn" : "#string",
+    "modifiedBy" : "service-account-internal",
+    "source" : {
+        "id" : "#number",
+        "type" : "MLLP",
+        "name" : "Source Hospital",
+        "inDataType" : "HL7_V2",
+        "outDataType" : "HL7_V2",
+        "configurations" : "#array",
+        "filters" : "#array",
+        "transformers" : "#array"
+    },
+    "destinations" : [ {
+        "id" : "#number",
+        "type" : "FILE",
+        "name" : "Shared file",
+        "inDataType" : "HL7_V2",
+        "outDataType" : "HL7_V2",
+        "configurations" : "#array",
+        "filters" : "#array",
+        "transformers" : "#array"
+    } ],
+    "auditMessages": ["ALL"]
+}

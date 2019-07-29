@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+    This Source Code Form is subject to the terms of the Mozilla Public License, v.
+    2.0 with a Healthcare Disclaimer.
+    A copy of the Mozilla Public License, v. 2.0 with the Healthcare Disclaimer can
+    be found under the top level directory, named LICENSE.
+    If a copy of the MPL was not distributed with this file, You can obtain one at
+    http://mozilla.org/MPL/2.0/.
+    If a copy of the Healthcare Disclaimer was not distributed with this file, You
+    can obtain one at the project website https://github.com/igia.
+
+    Copyright (C) 2018-2019 Persistent Systems, Inc.
+
+-->
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+                        
+    <changeSet id="datapipeline_sequence" author="jhipster">
+        <createSequence sequenceName="datapipeline_sequence" startValue="5000" incrementBy="50"/>
+    </changeSet>
+   
+    <changeSet id="destination_config_sequence" author="jhipster">
+        <createSequence sequenceName="destination_config_sequence" startValue="5000" incrementBy="50"/>
+    </changeSet>
+   
+    <changeSet id="destination_endpoint_sequence" author="jhipster">
+        <createSequence sequenceName="destination_endpoint_sequence" startValue="5000" incrementBy="50"/>
+    </changeSet>
+   
+    <changeSet id="destination_filter_sequence" author="jhipster">
+        <createSequence sequenceName="destination_filter_sequence" startValue="5000" incrementBy="50"/>
+    </changeSet>  
+   
+    <changeSet id="destination_transformer_sequence" author="jhipster">
+        <createSequence sequenceName="destination_transformer_sequence" startValue="5000" incrementBy="50"/>
+    </changeSet> 
+   
+    <changeSet id="source_config_sequence" author="jhipster">
+        <createSequence sequenceName="source_config_sequence" startValue="5000" incrementBy="50"/>
+    </changeSet> 
+   
+    <changeSet id="source_endpoint_sequence" author="jhipster">
+        <createSequence sequenceName="source_endpoint_sequence" startValue="5000" incrementBy="50"/>
+    </changeSet>    
+   
+    <changeSet id="source_filter_sequence" author="jhipster">
+        <createSequence sequenceName="source_filter_sequence" startValue="5000" incrementBy="50"/>
+    </changeSet>
+   
+    <changeSet id="source_transformer_sequence" author="jhipster">
+        <createSequence sequenceName="source_transformer_sequence" startValue="5000" incrementBy="50"/>
+    </changeSet> 
+   
+    <changeSet id="endpoint_metadata_sequence" author="jhipster">
+        <createSequence sequenceName="endpoint_metadata_sequence" startValue="5000" incrementBy="50"/>
+    </changeSet> 
+   
+    <changeSet id="audit_event" author="jhipster">
+        <createSequence sequenceName="audit_event" startValue="5000" incrementBy="50"/>
+    </changeSet>
+   
+    <changeSet author="jhipster" id="create_tinyint">
+        <sql dbms="postgresql">CREATE DOMAIN "tinyint" AS smallint</sql>
+    </changeSet>
+    
+    <changeSet author="jhipster" id="create_revinfo_table">
+        <createTable tableName="revinfo">
+            <column autoIncrement="true" name="rev" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="revinfoPK"/>
+            </column>
+            <column name="revtstmp" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+                        
+</databaseChangeLog>                        

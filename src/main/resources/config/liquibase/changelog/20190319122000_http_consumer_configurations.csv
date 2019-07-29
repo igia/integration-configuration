@@ -1,0 +1,3 @@
+id,igia_type,category,property,is_encrypted,is_mandatory,created_date,created_by,modified_date,modified_by
+70,HTTP,SOURCE,username,true,true,2019-03-18T00:00:00.000Z,system,2019-03-18T00:00:00.000Z,system
+71,HTTP,SOURCE,password,true,true,2019-03-18T00:00:00.000Z,system,2019-03-18T00:00:00.000Z,system

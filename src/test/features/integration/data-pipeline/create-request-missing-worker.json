@@ -1,0 +1,56 @@
+{
+    "name" : "A01 registration-400",
+    "description" : "sample integration pipeline to route A01 messages",
+    "deploy" : false,
+    "workerService" : "",
+    "source" : {
+        "type" : "MLLP",
+        "name" : "Source Hospital",
+        "inDataType" : "HL7_V2",
+        "outDataType" : "HL7_V2",
+        "configurations" : [ {
+            "key" : "hostname",
+            "value" : "localhost"
+        }, {
+            "key" : "port",
+            "value" : "1234"
+        } ],
+        "filters" : [ {
+            "order" : 0,
+            "type" : "JAVASCRIPT",
+            "data" : "sample filter expression",
+            "description" : "sample source filter"
+        } ],
+        "transformers" : [ {
+            "order" : 0,
+            "type" : "JAVASCRIPT",
+            "data" : "sample transformation expression",
+            "description" : "sample source transformation"
+        } ]
+    },
+    "destinations" : [ {
+        "type" : "FILE",
+        "name" : "Shared file",
+        "inDataType" : "HL7_V2",
+        "outDataType" : "HL7_V2",
+        "configurations" : [ {
+            "key" : "fileName",
+            "value" : "a01.txt"
+        }, {
+            "key" : "directoryName",
+            "value" : "/home/test"
+        } ],
+        "filters" : [ {
+            "order" : 0,
+            "type" : "JAVASCRIPT",
+            "data" : "sample filter expression",
+            "description" : "sample destination filter"
+        } ],
+        "transformers" : [ {
+            "order" : 0,
+            "type" : "JAVASCRIPT",
+            "data" : "sample transformation expression",
+            "description" : "sample destination transformation"
+        } ]
+    } ]
+}

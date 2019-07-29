@@ -1,0 +1,246 @@
+{
+  "failure": [
+  ],
+  "success": [
+    {
+      "dataPipeline": {
+        "id": "#number",
+        "name": "101_UnDeployed_Pipeline_with_FT",
+        "description": "MLLP to FILE and HL7 to HL7",
+        "deploy": false,
+        "version": "#number",
+        "state": "READY",
+        "workerService": "INTEGRATIONWORKER-I",
+        "createdOn": "#string",
+        "createdBy": "service-account-internal",
+        "modifiedOn": "#string",
+        "modifiedBy": "service-account-internal",
+        "reason": null,
+        "source": {
+           "id": "#number",
+          "type": "MLLP",
+          "name": "Source Hospital",
+          "inDataType": "HL7_V2",
+          "outDataType": "HL7_V2",
+          "configurations": [
+            {
+               "id": "#number",
+              "key": "hostname",
+              "value": "localhost"
+            },
+            {
+               "id": "#number",
+              "key": "port",
+              "value": "2065"
+            }
+          ],
+          "filters": [
+            {
+               "id": "#number",
+              "order": 1,
+              "type": "JAVASCRIPT",
+              "data": "request.getBody().toString().indexOf(\"ADT\") > -1",
+              "description": "sample source filter"
+            }
+          ],
+          "transformers": [
+            {
+               "id": "#number",
+              "order": 0,
+              "type": "JAVASCRIPT",
+              "data": "var msg = exchange.getIn().getBody(Java.type(\"ca.uhn.hl7v2.model.v26.message.ADT_A01\").class);var logger = org.slf4j.LoggerFactory.getLogger(exchange.getFromRouteId());logger.info (\"Source tranformer 1 logging ::\", msg);result = request.getBody().toString().toUpperCase();",
+              "description": "sample source filter"
+            },
+            {
+               "id": "#number",
+              "order": 1,
+              "type": "JAVASCRIPT",
+              "data": "var logger = org.slf4j.LoggerFactory.getLogger(exchange.getFromRouteId());logger.info (\"Source tranformer 2 logging ::\");",
+              "description": "sample source filter"
+            }
+          ]
+        },
+        "destinations": [
+          {
+             "id": "#number",
+            "type": "FILE",
+            "name": "Shared file",
+            "inDataType": "HL7_V2",
+            "outDataType": "HL7_V2",
+            "configurations": [
+             
+              {
+                 "id": "#number",
+                "key": "fileName",
+                "value": "data_002.hl7"
+              },
+              {
+                 "id": "#number",
+                "key": "directoryName",
+                "value": "/home/igia/Documents/files"
+              }
+            ],
+            "filters": [
+              {
+                 "id": "#number",
+                "order": 0,
+                "type": "JAVASCRIPT",
+                "data": "request.getBody().toString().indexOf(\"ADT\") > -1",
+                "description": "sample source filter"
+              },
+              {
+                 "id": "#number",
+                "order": 1,
+                "type": "JAVASCRIPT",
+                "data": "request.getBody().toString().indexOf(\"ADT\") > -1",
+                "description": "sample source filter"
+              }
+            ],
+            "transformers": [
+              {
+                 "id": "#number",
+                "order": 0,
+                "type": "JAVASCRIPT",
+                "data": "var logger = org.slf4j.LoggerFactory.getLogger(exchange.getFromRouteId());logger.info (\"Destination tranformer 1 logging ::\", msg);",
+                "description": "sample source filter"
+              },
+              {
+                 "id": "#number",
+                "order": 1,
+                "type": "JAVASCRIPT",
+                "data": "var logger = org.slf4j.LoggerFactory.getLogger(exchange.getFromRouteId());logger.info (\"Destination tranformer 2 logging ::\", msg);",
+                "description": "sample source filter"
+              }
+            ],
+            "responseTransformers": [
+            ]
+          }
+        ],
+    "auditMessages": ["ALL"]
+      }
+    },
+    {
+      "dataPipeline": {
+         "id": "#number",
+        "name": "109_UnDeployed_Pipeline_with_FT",
+        "description": "FILE to MLLP and CSV to HL7 v2",
+        "deploy": false,
+        "version": "#number",
+        "state": "READY",
+        "workerService": "INTEGRATIONWORKER-I",
+        "createdOn": "#string",
+        "createdBy": "service-account-internal",
+        "modifiedOn": "#string",
+        "modifiedBy": "service-account-internal",
+        "reason": null,
+        "source": {
+          "id": "#number",
+          "type": "FILE",
+          "name": "Shared file",
+          "inDataType": "CSV",
+          "outDataType": "HL7_V2",
+          "configurations": [
+            {
+               "id": "#number",
+              "key": "fileName",
+              "value": "data_001.csv"
+            },
+            {
+               "id": "#number",
+              "key": "directoryName",
+              "value": "/home/igia/Documents/files"
+            }
+          ],
+          "filters": [
+            {
+               "id": "#number",
+              "order": 0,
+              "type": "JAVASCRIPT",
+              "data": "request.getBody().toString().indexOf(\"ADT\") > -1",
+              "description": "sample source filter"
+            },
+            {
+               "id": "#number",
+              "order": 1,
+              "type": "JAVASCRIPT",
+              "data": "request.getBody().toString().indexOf(\"ADT\") > -1",
+              "description": "sample source filter"
+            }
+          ],
+          "transformers": [
+            {
+               "id": "#number",
+              "order": 0,
+              "type": "JAVASCRIPT",
+              "data": "var msg = exchange.getIn().getBody(Java.type(\"ca.uhn.hl7v2.model.v26.message.ADT_A01\").class);var logger = org.slf4j.LoggerFactory.getLogger(exchange.getFromRouteId());logger.info (\"Source tranformer 1 logging ::\", msg);result = request.getBody().toString().toUpperCase();",
+              "description": "sample source filter"
+            },
+            {
+               "id": "#number",
+              "order": 1,
+              "type": "JAVASCRIPT",
+              "data": "var logger = org.slf4j.LoggerFactory.getLogger(exchange.getFromRouteId());logger.info (\"Source tranformer 2 logging ::\");",
+              "description": "sample source filter"
+            }
+          ]
+        },
+        "destinations": [
+          {
+             "id": "#number",
+            "type": "MLLP",
+            "name": "Source Hospital",
+            "inDataType": "HL7_V2",
+            "outDataType": "HL7_V2",
+            "configurations": [
+              {
+                "id": "#number",
+                "key": "hostname",
+                "value": "localhost"
+              },
+              {
+                 "id": "#number",
+                "key": "port",
+                "value": "2066"
+              }
+            ],
+            "filters": [
+              {
+                "id": "#number",
+                "order": 0,
+                "type": "JAVASCRIPT",
+                "data": "request.getBody().toString().indexOf(\"ADT\") > -1",
+                "description": "sample source filter"
+              },
+              {
+                 "id": "#number",
+                "order": 1,
+                "type": "JAVASCRIPT",
+                "data": "request.getBody().toString().indexOf(\"ADT\") > -1",
+                "description": "sample source filter"
+              }
+            ],
+            "transformers": [
+              {
+                 "id": "#number",
+                "order": 0,
+                "type": "JAVASCRIPT",
+                "data": "var msg = exchange.getIn().getBody(Java.type(\"ca.uhn.hl7v2.model.v26.message.ADT_A01\").class);var logger = org.slf4j.LoggerFactory.getLogger(exchange.getFromRouteId());logger.info (\"Source tranformer 1 logging ::\", msg);result = request.getBody().toString().toUpperCase();",
+                "description": "sample source filter"
+              },
+              {
+                 "id": "#number",
+                "order": 1,
+                "type": "JAVASCRIPT",
+                "data": "var logger = org.slf4j.LoggerFactory.getLogger(exchange.getFromRouteId());logger.info (\"Source tranformer 2 logging ::\");",
+                "description": "sample source filter"
+              }
+            ],
+            "responseTransformers": [
+            ]
+          }
+        ],
+    "auditMessages": ["ALL"]
+      }
+    }
+  ]
+}

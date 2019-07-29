@@ -1,0 +1,38 @@
+[
+{
+  "name" : "Test 01", 
+  "description" : "Test Description",
+  "deploy" : false,
+  "workerService" : "INTEGRATIONWORKER-I",
+  "source" : {
+    "type" : "FILE",
+    "name" : "FILE Source",
+    "inDataType" : "CSV",
+    "outDataType" : "CSV",
+    "configurations" : [  {
+      "key" : "directoryName",
+      "value" : "fromSource"
+    }, {
+      "key" : "fileName",
+      "value" : "source.csv"
+    }],
+    "filters" : [],
+    "transformers" : [ ]
+  },
+  "destinations" : [ {
+    "type" : "FILE",
+    "name" : "File Destination",
+    "inDataType" : "CSV",
+    "outDataType" : "CSV",
+    "configurations" : [ {
+      "key" : "directoryName",
+      "value" : "fromDestination"
+    }, {
+      "key" : "fileName",
+      "value" : "destination.csv"
+    } ],
+    "filters" : [ ],
+    "transformers" : []
+  } ]
+}
+]
