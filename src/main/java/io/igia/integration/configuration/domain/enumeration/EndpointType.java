@@ -16,5 +16,5 @@ package io.igia.integration.configuration.domain.enumeration;
  * The EndpointType enumeration.
  */
 public enum EndpointType {
-    MLLP, FILE, SFTP, HTTP, HTTPS
+	MLLP, FILE, SFTP, HTTP, HTTPS
 }

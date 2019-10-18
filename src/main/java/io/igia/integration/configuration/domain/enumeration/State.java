@@ -16,5 +16,5 @@ package io.igia.integration.configuration.domain.enumeration;
  * The State enumeration.
  */
 public enum State {
-    READY, START, STOP, FAILED, STARTED, STARTING, STOPPED, STOPPING
+	READY, START, STOP, FAILED, STARTED, STARTING, STOPPED, STOPPING
 }

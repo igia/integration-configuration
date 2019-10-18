@@ -12,50 +12,49 @@
  */
 package io.igia.integration.configuration.service;
 
+import io.igia.integration.configuration.service.dto.EndpointMetadataDTO;
+
 import java.util.List;
 import java.util.Optional;
 
-import io.igia.integration.configuration.service.dto.EndpointMetadataDTO;
-
 /**
- * Service Interface for managing EndpointMetadata.
+ * Service Interface for managing {@link io.igia.integration.configuration.domain.EndpointMetadata}.
  */
 public interface EndpointMetadataService {
 
     /**
      * Save a endpointMetadata.
      *
-     * @param endpointMetadataDTO the entity to save
-     * 
-     * @return the persisted entity
+     * @param endpointMetadataDTO the entity to save.
+     * @return the persisted entity.
      */
     EndpointMetadataDTO save(EndpointMetadataDTO endpointMetadataDTO);
 
     /**
      * Get all the endpointMetadata.
      *
-     * @return the list of entities
+     * @return the list of entities.
      */
     List<EndpointMetadataDTO> findAll();
+
 
     /**
      * Get the "id" endpointMetadata.
      *
-     * @param id
-     *            the id of the entity
-     * @return the entity
+     * @param id the id of the entity.
+     * @return the entity.
      */
     Optional<EndpointMetadataDTO> findOne(Long id);
 
     /**
      * Delete the "id" endpointMetadata.
      *
-     * @param id
-     *            the id of the entity
+     * @param id the id of the entity.
      */
     void delete(Long id);
 
-    List<EndpointMetadataDTO> findAllByTypeAndCategoryAndIsMandatory(String type, String category, boolean isMandatory);
 
     List<EndpointMetadataDTO> findAllByTypeAndCategoryAndIsEncrypted(String type, String category, boolean isEncrypted);
+
+    List<EndpointMetadataDTO> findAllByTypeAndCategoryAndIsMandatory(String type, String category, boolean isMandatory);
 }

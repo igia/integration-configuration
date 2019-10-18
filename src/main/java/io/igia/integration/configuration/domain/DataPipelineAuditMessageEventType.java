@@ -42,8 +42,8 @@ public class DataPipelineAuditMessageEventType implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-    @SequenceGenerator( name = "sequenceGenerator", sequenceName = "event_sequence_generator")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "audit_event")
+    @SequenceGenerator( name = "audit_event", sequenceName = "audit_event_sequence")
     private Long id;
 
     @Column(name = "data_pipeline_id")

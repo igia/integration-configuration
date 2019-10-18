@@ -43,7 +43,7 @@
             <column name="transformer_type" type="varchar(255)" />
             <column name="data" type="clob"/>
             <column name="description" type="varchar(255)"/>
-            <column name="destination_endpoint_id" type="bigint"/>
+            <column name="endpoint_id" type="bigint"/>
         </createTable>
         
     </changeSet>

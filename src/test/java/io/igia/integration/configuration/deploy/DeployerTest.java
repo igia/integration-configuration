@@ -26,7 +26,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import io.igia.integration.configuration.deploy.Deployer;
 import io.igia.integration.configuration.domain.enumeration.EndpointType;
 import io.igia.integration.configuration.domain.enumeration.FilterType;
 import io.igia.integration.configuration.domain.enumeration.InDataType;
@@ -34,14 +33,10 @@ import io.igia.integration.configuration.domain.enumeration.OutDataType;
 import io.igia.integration.configuration.domain.enumeration.TransformerType;
 import io.igia.integration.configuration.service.ActiveMQTopicService;
 import io.igia.integration.configuration.service.dto.DataPipelineDTO;
-import io.igia.integration.configuration.service.dto.DestinationConfigDTO;
-import io.igia.integration.configuration.service.dto.DestinationEndpointDTO;
-import io.igia.integration.configuration.service.dto.DestinationFilterDTO;
-import io.igia.integration.configuration.service.dto.DestinationTransformerDTO;
-import io.igia.integration.configuration.service.dto.SourceConfigDTO;
-import io.igia.integration.configuration.service.dto.SourceEndpointDTO;
-import io.igia.integration.configuration.service.dto.SourceFilterDTO;
-import io.igia.integration.configuration.service.dto.SourceTransformerDTO;
+import io.igia.integration.configuration.service.dto.EndpointConfigDTO;
+import io.igia.integration.configuration.service.dto.EndpointDTO;
+import io.igia.integration.configuration.service.dto.FilterDTO;
+import io.igia.integration.configuration.service.dto.TransformerDTO;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DeployerTest {
@@ -54,21 +49,21 @@ public class DeployerTest {
     
     private DataPipelineDTO createEntity() {
 
-        Set<SourceConfigDTO> sourceConfigs = createSourceConfigs();
+        Set<EndpointConfigDTO> sourceConfigs = createSourceConfigs();
 
-        Set<SourceFilterDTO> sourceFilters = createSourceFilters();
+        Set<FilterDTO> sourceFilters = createSourceFilters();
 
-        Set<SourceTransformerDTO> sourceTransformers = createSourceTransformers();
+        Set<TransformerDTO> sourceTransformers = createSourceTransformers();
 
-        SourceEndpointDTO sourceEndpoint = createSourceEndpoint(sourceConfigs, sourceFilters, sourceTransformers);
+        EndpointDTO sourceEndpoint = createSourceEndpoint(sourceConfigs, sourceFilters, sourceTransformers);
 
-        Set<DestinationConfigDTO> destinationConfigs = createDestinationConfig();
+        Set<EndpointConfigDTO> destinationConfigs = createDestinationConfig();
 
-        Set<DestinationFilterDTO> destinationFilters = createDestinationFilter();
+        Set<FilterDTO> destinationFilters = createDestinationFilter();
 
-        Set<DestinationTransformerDTO> destinationTransformers = createDestinationTransformer();
+        Set<TransformerDTO> destinationTransformers = createDestinationTransformer();
 
-        Set<DestinationEndpointDTO> destinationEndpoints = createDestinationEndpoint(destinationConfigs,
+        Set<EndpointDTO> destinationEndpoints = createDestinationEndpoint(destinationConfigs,
                 destinationFilters, destinationTransformers);
 
         DataPipelineDTO dataPipeline = createDataPipeline(sourceEndpoint, destinationEndpoints);
@@ -76,8 +71,8 @@ public class DeployerTest {
         return dataPipeline;
     }
     
-    private DataPipelineDTO createDataPipeline(SourceEndpointDTO sourceEndpoint,
-            Set<DestinationEndpointDTO> destinationEndpoints) {
+    private DataPipelineDTO createDataPipeline(EndpointDTO sourceEndpoint,
+            Set<EndpointDTO> destinationEndpoints) {
         DataPipelineDTO dataPipeline = new DataPipelineDTO();
         dataPipeline.setName("MLLP to Source");
         dataPipeline.setDescription("MLLP to Source");
@@ -87,10 +82,10 @@ public class DeployerTest {
         return dataPipeline;
     }
 
-    private Set<DestinationEndpointDTO> createDestinationEndpoint(Set<DestinationConfigDTO> destinationConfigs,
-            Set<DestinationFilterDTO> destinationFilters, Set<DestinationTransformerDTO> destinationTransformers) {
-        Set<DestinationEndpointDTO> destinationEndpoints = new HashSet<>();
-        DestinationEndpointDTO destinationEndpoint = new DestinationEndpointDTO();
+    private Set<EndpointDTO> createDestinationEndpoint(Set<EndpointConfigDTO> destinationConfigs,
+            Set<FilterDTO> destinationFilters, Set<TransformerDTO> destinationTransformers) {
+        Set<EndpointDTO> destinationEndpoints = new HashSet<>();
+        EndpointDTO destinationEndpoint = new EndpointDTO();
         destinationEndpoint.setInDataType(InDataType.HL7_V2);
         destinationEndpoint.setOutDataType(OutDataType.HL7_V2);
         destinationEndpoint.setName("FILE Destiantion");
@@ -102,45 +97,45 @@ public class DeployerTest {
         return destinationEndpoints;
     }
 
-    private Set<DestinationTransformerDTO> createDestinationTransformer() {
-        Set<DestinationTransformerDTO> destinationTransformers = new HashSet<>();
-        DestinationTransformerDTO destinationTransformerDTO = new DestinationTransformerDTO();
-        destinationTransformerDTO.setOrder(0);
-        destinationTransformerDTO.setData("Write javascript here");
-        destinationTransformerDTO.setDescription("Destination Transformer");
-        destinationTransformerDTO.setType(TransformerType.JAVASCRIPT);
-        destinationTransformers.add(destinationTransformerDTO);
+    private Set<TransformerDTO> createDestinationTransformer() {
+        Set<TransformerDTO> destinationTransformers = new HashSet<>();
+        TransformerDTO TransformerDTO = new TransformerDTO();
+        TransformerDTO.setOrder(0);
+        TransformerDTO.setData("Write javascript here");
+        TransformerDTO.setDescription("Destination Transformer");
+        TransformerDTO.setType(TransformerType.JAVASCRIPT);
+        destinationTransformers.add(TransformerDTO);
         return destinationTransformers;
     }
 
-    private Set<DestinationFilterDTO> createDestinationFilter() {
-        Set<DestinationFilterDTO> destinationFilters = new HashSet<>();
-        DestinationFilterDTO destinationFilterDTO = new DestinationFilterDTO();
-        destinationFilterDTO.setOrder(0);
-        destinationFilterDTO.setDescription("Destination Filter");
-        destinationFilterDTO.setData("Write javascript here");
-        destinationFilterDTO.setType(FilterType.JAVASCRIPT);
-        destinationFilters.add(destinationFilterDTO);
+    private Set<FilterDTO> createDestinationFilter() {
+        Set<FilterDTO> destinationFilters = new HashSet<>();
+        FilterDTO FilterDTO = new FilterDTO();
+        FilterDTO.setOrder(0);
+        FilterDTO.setDescription("Destination Filter");
+        FilterDTO.setData("Write javascript here");
+        FilterDTO.setType(FilterType.JAVASCRIPT);
+        destinationFilters.add(FilterDTO);
         return destinationFilters;
     }
 
-    private Set<DestinationConfigDTO> createDestinationConfig() {
-        Set<DestinationConfigDTO> destinationConfigs = new HashSet<>();
-        DestinationConfigDTO destinationConfig = new DestinationConfigDTO();
+    private Set<EndpointConfigDTO> createDestinationConfig() {
+        Set<EndpointConfigDTO> destinationConfigs = new HashSet<>();
+        EndpointConfigDTO destinationConfig = new EndpointConfigDTO();
         destinationConfig.setKey("directoryName");
         destinationConfig.setValue("directoryName");
         destinationConfigs.add(destinationConfig);
 
-        destinationConfig = new DestinationConfigDTO();
+        destinationConfig = new EndpointConfigDTO();
         destinationConfig.setKey("fileName");
         destinationConfig.setValue("fileName");
         destinationConfigs.add(destinationConfig);
         return destinationConfigs;
     }
 
-    private SourceEndpointDTO createSourceEndpoint(Set<SourceConfigDTO> sourceConfigs,
-            Set<SourceFilterDTO> sourceFilters, Set<SourceTransformerDTO> sourceTransformers) {
-        SourceEndpointDTO sourceEndpoint = new SourceEndpointDTO();
+    private EndpointDTO createSourceEndpoint(Set<EndpointConfigDTO> sourceConfigs,
+            Set<FilterDTO> sourceFilters, Set<TransformerDTO> sourceTransformers) {
+        EndpointDTO sourceEndpoint = new EndpointDTO();
         sourceEndpoint.setInDataType(InDataType.HL7_V2);
         sourceEndpoint.setOutDataType(OutDataType.HL7_V2);
         sourceEndpoint.setName("MLLP Source");
@@ -151,9 +146,9 @@ public class DeployerTest {
         return sourceEndpoint;
     }
 
-    private Set<SourceTransformerDTO> createSourceTransformers() {
-        Set<SourceTransformerDTO> sourceTransformers = new HashSet<>();
-        SourceTransformerDTO transformerDTO = new SourceTransformerDTO();
+    private Set<TransformerDTO> createSourceTransformers() {
+        Set<TransformerDTO> sourceTransformers = new HashSet<>();
+        TransformerDTO transformerDTO = new TransformerDTO();
         transformerDTO.setOrder(0);
         transformerDTO.setData("Write java script here");
         transformerDTO.setType(TransformerType.JAVASCRIPT);
@@ -162,26 +157,26 @@ public class DeployerTest {
         return sourceTransformers;
     }
 
-    private Set<SourceFilterDTO> createSourceFilters() {
-        Set<SourceFilterDTO> sourceFilters = new HashSet<>();
-        SourceFilterDTO sourceFilterDTO = new SourceFilterDTO();
-        sourceFilterDTO.setData("Write java script here");
-        sourceFilterDTO.setOrder(0);
-        sourceFilterDTO.setType(FilterType.JAVASCRIPT);
-        sourceFilterDTO.setDescription("This is source filter");
-        sourceFilters.add(sourceFilterDTO);
+    private Set<FilterDTO> createSourceFilters() {
+        Set<FilterDTO> sourceFilters = new HashSet<>();
+        FilterDTO FilterDTO = new FilterDTO();
+        FilterDTO.setData("Write java script here");
+        FilterDTO.setOrder(0);
+        FilterDTO.setType(FilterType.JAVASCRIPT);
+        FilterDTO.setDescription("This is source filter");
+        sourceFilters.add(FilterDTO);
         return sourceFilters;
     }
 
-    private Set<SourceConfigDTO> createSourceConfigs() {
-        Set<SourceConfigDTO> sourceConfigs = new HashSet<>();
+    private Set<EndpointConfigDTO> createSourceConfigs() {
+        Set<EndpointConfigDTO> sourceConfigs = new HashSet<>();
         
-        SourceConfigDTO sourceConfig = new SourceConfigDTO();
+        EndpointConfigDTO sourceConfig = new EndpointConfigDTO();
         sourceConfig.setKey("hostname");
         sourceConfig.setValue("hostname");
         sourceConfigs.add(sourceConfig);
 
-        sourceConfig = new SourceConfigDTO();
+        sourceConfig = new EndpointConfigDTO();
         sourceConfig.setKey("port");
         sourceConfig.setValue("9080");
         sourceConfigs.add(sourceConfig);

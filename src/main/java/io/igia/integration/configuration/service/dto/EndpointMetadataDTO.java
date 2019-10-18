@@ -11,21 +11,16 @@
  * Copyright (C) 2018-2019 Persistent Systems, Inc.
  */
 package io.igia.integration.configuration.service.dto;
-
-import java.time.Instant;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.Objects;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
 /**
- * A DTO for the EndpointMetadata entity.
+ * A DTO for the {@link io.igia.integration.configuration.domain.EndpointMetadata} entity.
  */
-@JsonInclude(Include.NON_EMPTY)
 public class EndpointMetadataDTO implements Serializable {
 
-    private static final long serialVersionUID = -5583068461070914192L;
+    private static final long serialVersionUID = 1345424068088081535L;
 
     private Long id;
 
@@ -38,7 +33,7 @@ public class EndpointMetadataDTO implements Serializable {
     private Boolean isEncrypted;
 
     private Boolean isMandatory;
-
+    
     private Instant createdDate = Instant.now();
 
     private String createdBy;
@@ -47,7 +42,40 @@ public class EndpointMetadataDTO implements Serializable {
 
     private String modifiedBy;
 
-    public Long getId() {
+
+    public Instant getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Instant createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public Instant getModifiedDate() {
+		return modifiedDate;
+	}
+
+	public void setModifiedDate(Instant modifiedDate) {
+		this.modifiedDate = modifiedDate;
+	}
+
+	public String getModifiedBy() {
+		return modifiedBy;
+	}
+
+	public void setModifiedBy(String modifiedBy) {
+		this.modifiedBy = modifiedBy;
+	}
+
+	public Long getId() {
         return id;
     }
 
@@ -95,38 +123,6 @@ public class EndpointMetadataDTO implements Serializable {
         this.isMandatory = isMandatory;
     }
 
-    public Instant getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(Instant createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public Instant getModifiedDate() {
-        return modifiedDate;
-    }
-
-    public void setModifiedDate(Instant modifiedDate) {
-        this.modifiedDate = modifiedDate;
-    }
-
-    public String getModifiedBy() {
-        return modifiedBy;
-    }
-
-    public void setModifiedBy(String modifiedBy) {
-        this.modifiedBy = modifiedBy;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -150,10 +146,13 @@ public class EndpointMetadataDTO implements Serializable {
 
     @Override
     public String toString() {
-        return "EndpointMetadataDTO{" + "id=" + getId() + ", type='" + getType() + "'" + ", category='" + getCategory()
-                + "'" + ", property='" + getProperty() + "'" + ", isEncrypted='" + isIsEncrypted() + "'"
-                + ", isMandatory='" + isIsMandatory() + "'" + ", createdDate='" + getCreatedDate() + "'"
-                + ", createdBy='" + getCreatedBy() + "'" + ", modifiedDate='" + getModifiedDate() + "'"
-                + ", modifiedBy='" + getModifiedBy() + "'" + "}";
+        return "EndpointMetadataDTO{" +
+            "id=" + getId() +
+            ", type='" + getType() + "'" +
+            ", category='" + getCategory() + "'" +
+            ", property='" + getProperty() + "'" +
+            ", isEncrypted='" + isIsEncrypted() + "'" +
+            ", isMandatory='" + isIsMandatory() + "'" +
+            "}";
     }
 }

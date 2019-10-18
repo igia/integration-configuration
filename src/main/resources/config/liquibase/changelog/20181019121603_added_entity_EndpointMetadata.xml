@@ -20,12 +20,6 @@
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd
                         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
-    <property name="now" value="now()" dbms="h2"/>
-
-    <property name="now" value="current_timestamp" dbms="postgresql"/>
-
-    <property name="floatType" value="float4" dbms="postgresql, h2"/>
-    <property name="floatType" value="float" dbms="mysql, oracle, mssql"/>
 
     <!--
         Added the entity EndpointMetadata.
@@ -54,7 +48,7 @@
             <column name="is_mandatory" type="boolean">
                 <constraints nullable="true" />
             </column>
-
+            
             <column name="created_date" type="datetime">
                 <constraints nullable="true" />
             </column>
@@ -70,12 +64,10 @@
             <column name="modified_by" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
-
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
         <dropDefaultValue tableName="endpoint_metadata" columnName="created_date" columnDataType="datetime"/>
         <dropDefaultValue tableName="endpoint_metadata" columnName="modified_date" columnDataType="datetime"/>
-        
     </changeSet>
     <changeSet author="jhipster" id="loadData-example">
     	<loadData 
@@ -86,5 +78,5 @@
             tableName="endpoint_metadata">
     	</loadData>
 	</changeSet>
-    <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->
+
 </databaseChangeLog>

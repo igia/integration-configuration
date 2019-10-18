@@ -26,7 +26,7 @@
                                  baseTableName="data_pipeline"
                                  constraintName="fk_data_pipeline_source_id"
                                  referencedColumnNames="id"
-                                 referencedTableName="source_endpoint"/>
+                                 referencedTableName="endpoint"/>
 
     </changeSet>
 </databaseChangeLog>

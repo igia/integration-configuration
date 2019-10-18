@@ -12,21 +12,21 @@
  */
 package io.igia.integration.configuration.service.mapper;
 
-import org.mapstruct.*;
-
 import io.igia.integration.configuration.domain.*;
 import io.igia.integration.configuration.service.dto.ResponseTransformerDTO;
 
+import org.mapstruct.*;
+
 /**
- * Mapper for the entity ResponseTransformer and its DTO ResponseTransformerDTO.
+ * Mapper for the entity {@link ResponseTransformer} and its DTO {@link ResponseTransformerDTO}.
  */
-@Mapper(componentModel = "spring", uses = {DestinationEndpointMapper.class})
+@Mapper(componentModel = "spring", uses = {EndpointMapper.class})
 public interface ResponseTransformerMapper extends EntityMapper<ResponseTransformerDTO, ResponseTransformer> {
 
-    @Mapping(source = "destinationEndpoint.id", target = "destinationEndpointId")
+    @Mapping(source = "endpoint.id", target = "endpointId")
     ResponseTransformerDTO toDto(ResponseTransformer responseTransformer);
 
-    @Mapping(source = "destinationEndpointId", target = "destinationEndpoint")
+    @Mapping(source = "endpointId", target = "endpoint")
     ResponseTransformer toEntity(ResponseTransformerDTO responseTransformerDTO);
 
     default ResponseTransformer fromId(Long id) {

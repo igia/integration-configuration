@@ -19,8 +19,9 @@ import org.springframework.stereotype.Repository;
 
 import io.igia.integration.configuration.domain.EndpointMetadata;
 
+
 /**
- * Spring Data repository for the EndpointMetadata entity.
+ * Spring Data  repository for the EndpointMetadata entity.
  */
 @Repository
 public interface EndpointMetadataRepository extends JpaRepository<EndpointMetadata, Long> {

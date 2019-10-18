@@ -37,4 +37,32 @@
             <where>property = 'fileName' and category = 'DESTINATION' and igia_type = 'FILE'</where>
         </update>
     </changeSet>
+    <changeSet id="add_http_secure_property" author="jhipster">
+        <insert tableName="endpoint_metadata">
+            <column name="id" value="72"/>
+            <column name="igia_type" value="HTTP"/>
+            <column name="category" value="DESTINATION"/>
+            <column name="property" value="isSecure"/>
+            <column name="is_encrypted" value="false"/>
+            <column name="is_mandatory" value="false"/>
+            <column name="created_date" value="2019-08-22T00:00:00.000Z"/>
+            <column name="created_by" value="system"/>
+            <column name="modified_date" value="2019-08-22T00:00:00.000Z"/>
+            <column name="modified_by" value="system"/>
+        </insert>
+    </changeSet>
+    <changeSet id="add_http_secure_property_source" author="jhipster">
+        <insert tableName="endpoint_metadata">
+            <column name="id" value="73"/>
+            <column name="igia_type" value="HTTP"/>
+            <column name="category" value="SOURCE"/>
+            <column name="property" value="isSecure"/>
+            <column name="is_encrypted" value="false"/>
+            <column name="is_mandatory" value="true"/>
+            <column name="created_date" value="2019-08-23T00:00:00.000Z"/>
+            <column name="created_by" value="system"/>
+            <column name="modified_date" value="2019-08-23T00:00:00.000Z"/>
+            <column name="modified_by" value="system"/>
+        </insert>
+    </changeSet>
 </databaseChangeLog>

@@ -1,0 +1,11 @@
+{
+  "type": "https://www.jhipster.tech/problem/parameterized",
+  "title": "Parameterized Exception",
+  "status": 400,
+  "message": "error.missing.property",
+  "params": {
+    "field": "source.configurations",
+    "message": "Missing Property",
+    "value": "isSecure"
+  }
+}

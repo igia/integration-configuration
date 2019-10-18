@@ -49,5 +49,12 @@ public final class MessageConstants {
     public static final String DEPLOY = "deploy";  
     public static final String ERR_INVALID_DEPLOY_FLAG = "Deploy flag should be false";
     public static final String HEADER_CONSTANT_FILE_ATTACHMENT = "attachment; filename=\"";
+    public static final String HTTP_SECURE = "isSecure";
+    public static final String ERR_INVALID_SECURE_FLAG = "Secure field should be true";
+    public static final String HOSTNAME = "hostname";
+    public static final String RESOURCE_URI = "resourceUri";
+    public static final String DATAPIPELINE_SOURCE ="datapipeline.source";
+    public static final String DATAPIPELINE_DESTINATION = "datapipeline.destination";
+    public static final String ERR_DUPLICATE_SOURCE_DESTINATION_ENDPOINT = "Duplicate Source and Destination Endpoint";
     
 }

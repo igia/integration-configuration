@@ -195,6 +195,7 @@ public class DataPipelineServiceImpl implements DataPipelineService {
             DataPipelineValidator.validate(dataPipelineMapper.toDto(oldDataPipeline), dataPipelineDTO, endpointMetadataService, dataPipelineRepository,discoveryClient,applicationProperties);
 
             DataEncrypt.encrypt(dataPipelineDTO, endpointMetadataService, encryptionUtility);
+            dataPipelineDTO.setVersion(oldDataPipeline.getVersion());
             
             DataPipeline newDataPipeline = dataPipelineMapper.toEntity(dataPipelineDTO);
             

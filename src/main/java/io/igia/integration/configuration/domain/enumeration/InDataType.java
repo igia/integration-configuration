@@ -16,5 +16,5 @@ package io.igia.integration.configuration.domain.enumeration;
  * The InDataType enumeration.
  */
 public enum InDataType {
-    HL7_V2, CSV, JSON, RAW
+	HL7_V2, CSV, JSON, RAW
 }

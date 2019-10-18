@@ -37,6 +37,7 @@
             "fieldName": "modifiedBy",
             "fieldType": "String"
         }
+
     ],
     "relationships": [],
     "changelogDate": "20181019121603",

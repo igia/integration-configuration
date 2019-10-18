@@ -54,15 +54,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.igia.integration.configuration.IntegrationconfigurationApp;
 import io.igia.integration.configuration.deploy.Deployer;
 import io.igia.integration.configuration.domain.DataPipeline;
-import io.igia.integration.configuration.domain.DestinationConfig;
 import io.igia.integration.configuration.domain.DestinationEndpoint;
-import io.igia.integration.configuration.domain.DestinationFilter;
-import io.igia.integration.configuration.domain.DestinationTransformer;
+import io.igia.integration.configuration.domain.EndpointConfig;
+import io.igia.integration.configuration.domain.Filter;
 import io.igia.integration.configuration.domain.ResponseTransformer;
-import io.igia.integration.configuration.domain.SourceConfig;
 import io.igia.integration.configuration.domain.SourceEndpoint;
-import io.igia.integration.configuration.domain.SourceFilter;
-import io.igia.integration.configuration.domain.SourceTransformer;
+import io.igia.integration.configuration.domain.Transformer;
 import io.igia.integration.configuration.domain.enumeration.EndpointType;
 import io.igia.integration.configuration.domain.enumeration.FilterType;
 import io.igia.integration.configuration.domain.enumeration.InDataType;
@@ -73,7 +70,6 @@ import io.igia.integration.configuration.service.ActiveMQTopicService;
 import io.igia.integration.configuration.service.DataPipelineService;
 import io.igia.integration.configuration.service.dto.DataPipelineDTO;
 import io.igia.integration.configuration.service.mapper.DataPipelineMapper;
-import io.igia.integration.configuration.web.rest.DataPipelineResource;
 import io.igia.integration.configuration.web.rest.errors.ExceptionTranslator;
 
 
@@ -184,62 +180,66 @@ public class DataPipelineResourceIntTest {
      */
     public static DataPipeline createEntity(EntityManager em) {
 
-        SourceConfig sourceConfig = new SourceConfig().key(KEY_HOSTNAME)
+        EndpointConfig sourceConfig = new EndpointConfig().key(KEY_HOSTNAME)
                 .value(VALUE_HOSTNAME);
 
-        Set<SourceConfig> sourceConfigs = new HashSet<>();
+        Set<EndpointConfig> sourceConfigs = new HashSet<>();
         sourceConfigs.add(sourceConfig);
 
-        sourceConfig = new SourceConfig().key(KEY_PORT).value(VALUE_PORT);
+        sourceConfig = new EndpointConfig().key(KEY_PORT).value(VALUE_PORT);
         sourceConfigs.add(sourceConfig);
         
-        Set<SourceFilter> sourceFilters = new HashSet<>();
-        SourceFilter sourceFilter = new SourceFilter().data(DEFAULT_DATA).description(DEFAULT_DESCRIPTION)
+        Set<Filter> sourceFilters = new HashSet<>();
+        Filter sourceFilter = new Filter().data(DEFAULT_DATA).description(DEFAULT_DESCRIPTION)
                 .order(DEFAULT_ORDER).type(FilterType.JAVASCRIPT);
         
         sourceFilters.add(sourceFilter);
         
-        Set<SourceTransformer> sourceTransformers = new HashSet<>();
-        SourceTransformer sourceTransformer = new SourceTransformer().data(DEFAULT_DATA).description(DEFAULT_DESCRIPTION)
+        Set<Transformer> sourceTransformers = new HashSet<>();
+        Transformer sourceTransformer = new Transformer().data(DEFAULT_DATA).description(DEFAULT_DESCRIPTION)
                 .order(DEFAULT_ORDER).type(TransformerType.JAVASCRIPT);
         sourceTransformers.add(sourceTransformer);
                 
-        SourceEndpoint sourceEndpoint = new SourceEndpoint().inDataType(InDataType.HL7_V2)
+        SourceEndpoint sourceEndpoint = (SourceEndpoint) new SourceEndpoint().inDataType(InDataType.HL7_V2)
                 .outDataType(OutDataType.HL7_V2).name(DEFAULT_NAME).configurations(sourceConfigs)
                 .type(EndpointType.MLLP).filters(sourceFilters).transformers(sourceTransformers);
 
-        DestinationConfig destinationConfig = new DestinationConfig()
+        EndpointConfig destinationConfig = new EndpointConfig()
                 .key(KEY_DIRECTORY_NAME).value(VALUE_DIRECTORY_NAME);
 
-        Set<DestinationConfig> destinationConfigs = new HashSet<>();
+        Set<EndpointConfig> destinationConfigs = new HashSet<>();
         destinationConfigs.add(destinationConfig);
 
-        destinationConfig = new DestinationConfig().key(KEY_FILE_NAME)
+        destinationConfig = new EndpointConfig().key(KEY_FILE_NAME)
                 .value(VALUE_FILE_NAME);
         destinationConfigs.add(destinationConfig);
         
-        Set<DestinationFilter> destinationFilters = new HashSet<>();
-        DestinationFilter destinationFilter = new DestinationFilter().data(DEFAULT_DATA).description(DEFAULT_DESCRIPTION)
+        Set<Filter> destinationFilters = new HashSet<>();
+        Filter destinationFilter = new Filter().data(DEFAULT_DATA).description(DEFAULT_DESCRIPTION)
                 .order(DEFAULT_ORDER).type(FilterType.JAVASCRIPT);
         destinationFilters.add(destinationFilter);
         
-        Set<DestinationTransformer> destinationTransformers = new HashSet<>();
-        DestinationTransformer destinationTransformer = new DestinationTransformer().data(DEFAULT_DATA).description(DEFAULT_DESCRIPTION)
+        Set<Transformer> destinationTransformers = new HashSet<>();
+        Transformer destinationTransformer = new Transformer().data(DEFAULT_DATA).description(DEFAULT_DESCRIPTION)
                 .order(DEFAULT_ORDER).type(TransformerType.JAVASCRIPT);
         
         destinationTransformers.add(destinationTransformer);
         
         
-        Set<ResponseTransformer> responseTransformers = new HashSet<>();
-        ResponseTransformer rt = new ResponseTransformer().data(DEFAULT_DATA).description(DEFAULT_DESCRIPTION)
-                .order(DEFAULT_ORDER).type(TransformerType.JAVASCRIPT);
         
+        Set<ResponseTransformer> responseTransformers = new HashSet<>();
+        ResponseTransformer rt = new  ResponseTransformer().data(DEFAULT_DATA).description(DEFAULT_DESCRIPTION)
+        .order(DEFAULT_ORDER).type(TransformerType.JAVASCRIPT);
+         
         responseTransformers.add(rt);
+        
 
-        DestinationEndpoint destinationEndpoint = new DestinationEndpoint()
+        DestinationEndpoint destinationEndpoint = (DestinationEndpoint) new DestinationEndpoint()
                 .inDataType(InDataType.HL7_V2).outDataType(OutDataType.HL7_V2).name(DEFAULT_NAME)
                 .configurations(destinationConfigs).type(EndpointType.FILE).filters(destinationFilters)
-                .transformers(destinationTransformers).responseTransformers(responseTransformers);
+                .transformers(destinationTransformers)
+                .responseTransformers(responseTransformers)
+                ;
 
         Set<DestinationEndpoint> destinationEndpoints = new HashSet<>();
         destinationEndpoints.add(destinationEndpoint);

@@ -20,13 +20,14 @@
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd
                         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
+
     <property name="now" value="now()" dbms="h2"/>
 
     <property name="now" value="current_timestamp" dbms="postgresql"/>
 
     <property name="floatType" value="float4" dbms="postgresql, h2"/>
     <property name="floatType" value="float" dbms="mysql, oracle, mssql"/>
-
+    
     <!--
         Added the entity DataPipeline.
     -->
@@ -59,7 +60,7 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="created_date" type="datetime">
+            <column name="created_on" type="datetime">
                 <constraints nullable="true" />
             </column>
 
@@ -67,7 +68,7 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="modified_date" type="datetime">
+            <column name="modified_on" type="datetime">
                 <constraints nullable="true" />
             </column>
 
@@ -77,11 +78,14 @@
             <column name="source_id" type="bigint">
                 <constraints unique="true" nullable="true" uniqueConstraintName="ux_data_pipeline_source_id" />
             </column>
+            <column name="reason" type="clob">
+                <constraints nullable="true"  />
+            </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
-        <dropDefaultValue tableName="data_pipeline" columnName="created_date" columnDataType="datetime"/>
-        <dropDefaultValue tableName="data_pipeline" columnName="modified_date" columnDataType="datetime"/>
-        
+
+        <dropDefaultValue tableName="data_pipeline" columnName="created_on" columnDataType="datetime"/>
+        <dropDefaultValue tableName="data_pipeline" columnName="modified_on" columnDataType="datetime"/>
     </changeSet>
-    <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->
+
 </databaseChangeLog>

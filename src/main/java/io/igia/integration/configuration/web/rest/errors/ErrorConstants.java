@@ -46,6 +46,8 @@ public final class ErrorConstants {
     public static final String VALID_IMPORT = "valid.import";
     public static final String ERR_INVALID_DEPLOY_FLAG = "error.invalid.deploy.flag";
     public static final String ERR_UPDATE_DEPLOYED_PIPELINE = "error.update.deployed.pipeline";
+    public static final String ERR_INVALID_SECURE_FLAG = "error.invalid.secure.flag";
+    public static final String ERR_DUPLICATE_SOURCE_DESTINATION_ENDPOINT = "error.duplicate.source.destination.endpoint";
     private ErrorConstants() {
     }
 }

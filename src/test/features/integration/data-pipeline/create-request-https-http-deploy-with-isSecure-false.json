@@ -1,0 +1,113 @@
+{
+    "name" : "A02 registration",
+    "description" : "sample integration pipeline to route A01 messages",
+    "deploy" : true,
+    "workerService" : "INTEGRATIONWORKER-I",
+    "source" : {
+        "type": "HTTP",
+        "name": "Source Hospital",
+        "inDataType": "HL7_V2",
+        "outDataType": "HL7_V2",
+        "configurations": [
+            {
+                "key": "hostname",
+                "value": "localhost"
+            },
+            {
+                "key": "port",
+                "value": "1249"
+            },
+            {
+                "key": "resourceUri",
+                "value": "/medical-records"
+            },
+            {
+                "key": "username",
+                "value": "admin"
+            },
+            {
+                "key": "password",
+                "value": "admin"
+            },
+            {
+                "key":"isSecure",
+                "value" : "false"
+            }
+        ],
+        "filters" : [ {
+            "order" : 0,
+            "type" : "JAVASCRIPT",
+            "data" : "sample filter expression:1",
+            "description" : "sample source filter:1"
+        },{
+            "order" : 1,
+            "type" : "JAVASCRIPT",
+            "data" : "sample filter expression:2",
+            "description" : "sample source filter:2"
+        } ],
+        "transformers" : [ {
+            "order" : 0,
+            "type" : "JAVASCRIPT",
+            "data" : "sample transformation expression:1",
+            "description" : "sample source transformation:1"
+        },{
+            "order" : 1,
+            "type" : "JAVASCRIPT",
+            "data" : "sample transformation expression:2",
+            "description" : "sample source transformation:2"
+        } ]
+    },
+    "destinations" : [ {
+        "type": "HTTP",
+        "name": "Destination Hospital",
+        "inDataType": "HL7_V2",
+        "outDataType": "HL7_V2",
+        "configurations": [
+            {
+                "key": "hostname",
+                "value": "localhost"
+            },
+            {
+                "key": "port",
+                "value": "1250"
+            },
+            {
+                "key": "resourceUri",
+                "value": "/patient-info"
+            },
+            {
+                "key":"isSecure",
+                "value" : "false"
+            }
+        ],
+        "filters" : [ {
+            "order" : 0,
+            "type" : "JAVASCRIPT",
+            "data" : "sample filter expression:1",
+            "description" : "sample source filter:1"
+        },{
+            "order" : 1,
+            "type" : "JAVASCRIPT",
+            "data" : "sample filter expression:2",
+            "description" : "sample source filter:2"
+        } ],
+        "transformers" : [ {
+            "order" : 0,
+            "type" : "JAVASCRIPT",
+            "data" : "sample transformation expression:1",
+            "description" : "sample source transformation:1"
+        },{
+            "order" : 1,
+            "type" : "JAVASCRIPT",
+            "data" : "sample transformation expression:2",
+            "description" : "sample source transformation:2"
+        } ],
+        "responseTransformers" : [{
+            "order" : 1,
+            "type" : "JAVASCRIPT",
+            "data" : "sample transformation expression:3",
+            "description" : "sample source transformation:3"
+        }]
+    } ],
+    "auditMessages": ["ALL"]
+}

@@ -1,11 +1,11 @@
 
 
 enum State {
-	READY, START, STOP, FAILED
+	READY, START, STOP, FAILED, STARTING, STARTED, STOPPING, STOPPED
 }
 
 enum EndpointType {
-	MLLP, FILE
+	MLLP, FILE, HTTP, SFTP
 }
 
 enum FilterType {
@@ -16,11 +16,11 @@ enum TransformerType {
 }
 
 enum InDataType {
-  HL7_V2
+  HL7_V2, JSON, CSV, RAW
 }
 
 enum OutDataType {
-  HL7_V2
+  HL7_V2, JSON, CSV, RAW
 }
 
 entity DataPipeline {
@@ -30,58 +30,40 @@ entity DataPipeline {
     version String,
     state State,
     workerService String,
-    createdDate Instant, 
+    createdOn Instant, 
     createdBy String, 
-    modifiedDate Instant, 
+    modifiedOn Instant, 
     modifiedBy String
 }
 
-entity SourceEndpoint {
+entity Endpoint {
 	type EndpointType,
     name String, 
     inDataType InDataType, 
-    outDataType OutDataType
+    outDataType OutDataType,
+    category String
 }
 
-entity DestinationEndpoint {
-	type EndpointType,
-    name String, 
-    inDataType InDataType, 
-    outDataType OutDataType
-}
 
-entity SourceConfig {
+entity EndpointConfig {
 	configKey String, 
     configValue String
 }
 
-entity DestinationConfig {
-	configKey String, 
-    configValue String
-}
-
-entity SourceFilter {
+entity Filter {
 	filterOrder Integer,
     filterType FilterType,
     data TextBlob,
     description String
 }
 
-entity DestinationFilter {
-	filterOrder Integer,
-    filterType FilterType,
-    data TextBlob,
-    description String
-}
-
-entity SourceTransformer {
+entity Transformer {
 	transformerOrder Integer,
     transformerType TransformerType,
     data TextBlob,
     description String
 }
-
-entity DestinationTransformer {
+entity ResponseTransformer {
 	transformerOrder Integer,
     transformerType TransformerType,
     data TextBlob,
@@ -97,19 +79,18 @@ entity EndpointMetadata{
 }
 
 relationship OneToOne {
-	DataPipeline{source} to SourceEndpoint
+	DataPipeline{source} to Endpoint
 }
 
 relationship OneToMany { 
-	DataPipeline{destination} to DestinationEndpoint,
-    SourceEndpoint{filter} to SourceFilter , 
-    SourceEndpoint{transformer} to SourceTransformer,
-    SourceEndpoint{configuration} to SourceConfig,
-    DestinationEndpoint{filter} to DestinationFilter,
-    DestinationEndpoint{transformer} to DestinationTransformer,
-    DestinationEndpoint{configuration} to DestinationConfig
+	DataPipeline{destination} to Endpoint,
+    Endpoint{filter} to Filter , 
+    Endpoint{transformer} to Transformer,
+    Endpoint{configuration} to EndpointConfig,
+    Endpoint{responseTransformer} to ResponseTransformer
 }
 
+paginate DataPipeline with  pagination
 dto * with mapstruct
 service all with serviceImpl
 

@@ -55,6 +55,10 @@
             {
                 "key": "resourceUri",
                 "value": "/patient-info"
+            },
+            {
+                "key":"isSecure",
+                "value" : "false"
             }
         ],
         "filters" : [ {

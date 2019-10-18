@@ -11,44 +11,42 @@
  * Copyright (C) 2018-2019 Persistent Systems, Inc.
  */
 package io.igia.integration.configuration.service.dto;
-
 import java.io.Serializable;
 import java.util.Objects;
-
 import javax.persistence.Lob;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.igia.integration.configuration.domain.enumeration.TransformerType;
 
 /**
- * A DTO for the ResponseTransformer entity.
+ * A DTO for the {@link io.igia.integration.configuration.domain.ResponseTransformer} entity.
  */
 public class ResponseTransformerDTO implements Serializable {
 
-    private static final long serialVersionUID = 2798670781091004712L;
+    private static final long serialVersionUID = -7335396237538952186L;
 
     private Long id;
 
-    @NotNull
-    @Min(value = 0)
     private Integer order;
 
-    @NotNull
     private TransformerType type;
 
-    @NotNull
-    @NotEmpty
     @Lob
     private String data;
 
     private String description;
 
     @JsonIgnore
-    private Long destinationEndpointId;
+    private Long endpointId;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Integer getOrder() {
         return order;
@@ -64,14 +62,6 @@ public class ResponseTransformerDTO implements Serializable {
 
     public void setType(TransformerType type) {
         this.type = type;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getData() {
@@ -90,12 +80,12 @@ public class ResponseTransformerDTO implements Serializable {
         this.description = description;
     }
 
-    public Long getDestinationEndpointId() {
-        return destinationEndpointId;
+    public Long getEndpointId() {
+        return endpointId;
     }
 
-    public void setDestinationEndpointId(Long destinationEndpointId) {
-        this.destinationEndpointId = destinationEndpointId;
+    public void setEndpointId(Long endpointId) {
+        this.endpointId = endpointId;
     }
 
     @Override
@@ -127,7 +117,7 @@ public class ResponseTransformerDTO implements Serializable {
             ", transformerType='" + getType() + "'" +
             ", data='" + getData() + "'" +
             ", description='" + getDescription() + "'" +
-            ", destinationEndpoint=" + getDestinationEndpointId() +
+            ", endpoint=" + getEndpointId() +
             "}";
     }
 }

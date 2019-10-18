@@ -12,13 +12,13 @@
  */
 package io.igia.integration.configuration.service.mapper;
 
-import org.mapstruct.*;
-
 import io.igia.integration.configuration.domain.*;
 import io.igia.integration.configuration.service.dto.EndpointMetadataDTO;
 
+import org.mapstruct.*;
+
 /**
- * Mapper for the entity EndpointMetadata and its DTO EndpointMetadataDTO.
+ * Mapper for the entity EndpointMetadata and its DTO EndpointMetadataDTO
  */
 @Mapper(componentModel = "spring", uses = {})
 public interface EndpointMetadataMapper extends EntityMapper<EndpointMetadataDTO, EndpointMetadata> {
