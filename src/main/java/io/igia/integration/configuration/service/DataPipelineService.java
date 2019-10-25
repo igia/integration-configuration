@@ -12,6 +12,12 @@
  */
 package io.igia.integration.configuration.service;
 
+import io.igia.integration.configuration.domain.enumeration.State;
+import io.igia.integration.configuration.service.dto.DataPipelineDTO;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -21,47 +27,60 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-
-import io.igia.integration.configuration.domain.enumeration.State;
-import io.igia.integration.configuration.service.dto.DataPipelineDTO;
-
 /**
- * Service Interface for managing DataPipeline.
+ * Service Interface for managing {@link io.igia.integration.configuration.domain.DataPipeline}.
  */
 public interface DataPipelineService {
 
     /**
      * Save a dataPipeline.
      *
-     * @param dataPipelineDTO the entity to save
-     * @return the persisted entity
+     * @param dataPipelineDTO the entity to save.
+     * @return the persisted entity.
+     * @throws BadPaddingException 
+     * @throws IllegalBlockSizeException 
+     * @throws NoSuchPaddingException 
+     * @throws NoSuchAlgorithmException 
+     * @throws InvalidKeyException 
      */
-    DataPipelineDTO save(DataPipelineDTO dataPipelineDTO)throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException;
+    DataPipelineDTO save(DataPipelineDTO dataPipelineDTO) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException;
 
     /**
      * Get all the dataPipelines.
      *
-     * @return the list of entities
+     * @param pageable the pagination information.
+     * @return the list of entities.
+     * @throws BadPaddingException 
+     * @throws IllegalBlockSizeException 
+     * @throws NoSuchPaddingException 
+     * @throws NoSuchAlgorithmException 
+     * @throws InvalidKeyException 
      */
-    List<DataPipelineDTO> findAll() throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException;
-    
-    
-    List<DataPipelineDTO> findAllByWorkerService(String workerService) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException;
-    
-    List<DataPipelineDTO> findAllByStateAndWorkerServiceIgnoreCase(State state, String workerService) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException;
-    
-    
-    DataPipelineDTO update(DataPipelineDTO dataPipelineDTO)throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException;
-    
+    Page<DataPipelineDTO> findAll(Pageable pageable) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException;
+
+
+    /**
+     * Get the "id" dataPipeline.
+     *
+     * @param id the id of the entity.
+     * @return the entity.
+     */
     Optional<DataPipelineDTO> findOne(Long id);
 
+    /**
+     * Delete the "id" dataPipeline.
+     *
+     * @param id the id of the entity.
+     */
     void delete(Long id);
 
-    Page<DataPipelineDTO> findAll(Pageable pageable) throws InvalidKeyException, NoSuchAlgorithmException,
-            NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException;
-    
-    public void updateState(DataPipelineDTO newDataPipelineDTO, State newState, Boolean deploy, String reason);
+    List<DataPipelineDTO> findAll() throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException,IllegalBlockSizeException, BadPaddingException;
 
+    List<DataPipelineDTO> findAllByWorkerService(String workerService) throws InvalidKeyException,NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException;
+
+    List<DataPipelineDTO> findAllByStateAndWorkerServiceIgnoreCase(State state, String workerService) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException,BadPaddingException;
+
+    DataPipelineDTO update(DataPipelineDTO dataPipelineDTO) throws InvalidKeyException, NoSuchAlgorithmException,NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException;
+
+    void updateState(DataPipelineDTO newDataPipelineDTO, State state, Boolean deploy, String reason);
 }

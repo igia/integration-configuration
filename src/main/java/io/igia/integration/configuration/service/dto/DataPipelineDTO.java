@@ -19,8 +19,11 @@ import java.util.Set;
 
 import javax.persistence.Lob;
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import io.igia.integration.configuration.domain.enumeration.AuditMessageEventType;
 import io.igia.integration.configuration.domain.enumeration.State;
@@ -36,6 +39,7 @@ public class DataPipelineDTO implements Serializable {
 
     @NotNull
     @NotEmpty
+    @NotBlank
     private String name;
 
     private String description;
@@ -63,31 +67,33 @@ public class DataPipelineDTO implements Serializable {
 
     @NotNull
     @Valid
-    private SourceEndpointDTO source;
+    @JsonIgnoreProperties(value = {"responseTransformers"})
+    private EndpointDTO source;
 
     @NotEmpty
     @Valid
-    private Set<DestinationEndpointDTO> destinations = new HashSet<>();
+    private Set<EndpointDTO> destinations = new HashSet<>();
     
     private Set<AuditMessageEventType> auditMessages = new HashSet<>();
 
-    public SourceEndpointDTO getSource() {
+
+    public EndpointDTO getSource() {
         return source;
     }
 
-    public void setSource(SourceEndpointDTO source) {
+    public void setSource(EndpointDTO source) {
         this.source = source;
     }
 
-    public Set<DestinationEndpointDTO> getDestinations() {
+    public Set<EndpointDTO> getDestinations() {
         return destinations;
     }
 
-    public void setDestinations(Set<DestinationEndpointDTO> destinations) {
+    public void setDestinations(Set<EndpointDTO> destinations) {
         this.destinations = destinations;
     }
 
-    public Long getId() {
+	public Long getId() {
         return id;
     }
 

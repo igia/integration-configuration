@@ -20,26 +20,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import io.igia.integration.configuration.domain.DataPipeline;
-import io.igia.integration.configuration.domain.DestinationConfig;
 import io.igia.integration.configuration.domain.DestinationEndpoint;
-import io.igia.integration.configuration.domain.DestinationFilter;
-import io.igia.integration.configuration.domain.DestinationTransformer;
+import io.igia.integration.configuration.domain.Endpoint;
+import io.igia.integration.configuration.domain.EndpointConfig;
+import io.igia.integration.configuration.domain.Filter;
 import io.igia.integration.configuration.domain.ResponseTransformer;
-import io.igia.integration.configuration.domain.SourceConfig;
-import io.igia.integration.configuration.domain.SourceEndpoint;
-import io.igia.integration.configuration.domain.SourceFilter;
-import io.igia.integration.configuration.domain.SourceTransformer;
+import io.igia.integration.configuration.domain.Transformer;
 import io.igia.integration.configuration.domain.enumeration.State;
 import io.igia.integration.configuration.service.dto.DataPipelineDTO;
-import io.igia.integration.configuration.service.dto.DestinationConfigDTO;
-import io.igia.integration.configuration.service.dto.DestinationEndpointDTO;
-import io.igia.integration.configuration.service.dto.DestinationFilterDTO;
-import io.igia.integration.configuration.service.dto.DestinationTransformerDTO;
+import io.igia.integration.configuration.service.dto.EndpointConfigDTO;
+import io.igia.integration.configuration.service.dto.EndpointDTO;
+import io.igia.integration.configuration.service.dto.FilterDTO;
 import io.igia.integration.configuration.service.dto.ResponseTransformerDTO;
-import io.igia.integration.configuration.service.dto.SourceConfigDTO;
-import io.igia.integration.configuration.service.dto.SourceEndpointDTO;
-import io.igia.integration.configuration.service.dto.SourceFilterDTO;
-import io.igia.integration.configuration.service.dto.SourceTransformerDTO;
+import io.igia.integration.configuration.service.dto.TransformerDTO;
 
 @Component
 public class DataPipelineHelper {
@@ -54,6 +47,7 @@ public class DataPipelineHelper {
         oldDataPipeline.setDescription(newDataPipeline.getDescription());
         oldDataPipeline.setName(newDataPipeline.getName());
         oldDataPipeline.setModifiedBy(userName);
+        oldDataPipeline.setVersion(oldDataPipeline.getVersion());
         if(newDataPipeline.isDeploy()){
             oldDataPipeline.setState(State.STARTING);
         }else{
@@ -96,43 +90,43 @@ public class DataPipelineHelper {
     }
 
     private void setSourceEndpoint(DataPipeline dataPipeline) {
-        SourceEndpoint sourceEndpoint = dataPipeline.getSource();
+        Endpoint sourceEndpoint = dataPipeline.getSource();
         if (sourceEndpoint != null) {
-            
-            for (SourceFilter sourceFilter : sourceEndpoint.getFilters()) {
-                sourceFilter.setSourceEndpoint(sourceEndpoint);
+            sourceEndpoint.setDataPipeline(dataPipeline);
+            for (Filter sourceFilter : sourceEndpoint.getFilters()) {
+                sourceFilter.setEndpoint(sourceEndpoint);
                 sourceEndpoint.addFilter(sourceFilter);
             }
 
-            for (SourceTransformer sourceTransformer : sourceEndpoint.getTransformers()) {
-                sourceTransformer.setSourceEndpoint(sourceEndpoint);
+            for (Transformer sourceTransformer : sourceEndpoint.getTransformers()) {
+                sourceTransformer.setEndpoint(sourceEndpoint);
                 sourceEndpoint.addTransformer(sourceTransformer);
             }
 
-            for (SourceConfig sourceConfig : sourceEndpoint.getConfigurations()) {
-                sourceConfig.setSourceEndpoint(sourceEndpoint);
+            for (EndpointConfig sourceConfig : sourceEndpoint.getConfigurations()) {
+                sourceConfig.setEndpoint(sourceEndpoint);
                 sourceEndpoint.addConfiguration(sourceConfig);
             }
         }
     }
 
     private void setDestinationEndpoint(DataPipeline dataPipeline , Set<DestinationEndpoint> destinationEndpoints) {
-        for (DestinationEndpoint destinationEndpoint : destinationEndpoints) {
+        for (Endpoint destinationEndpoint : destinationEndpoints) {
             destinationEndpoint.setDataPipeline(dataPipeline);
-            for (DestinationFilter destinationFilter : destinationEndpoint.getFilters()) {
-                destinationFilter.setDestinationEndpoint(destinationEndpoint);
+            for (Filter destinationFilter : destinationEndpoint.getFilters()) {
+                destinationFilter.setEndpoint(destinationEndpoint);
                 destinationEndpoint.addFilter(destinationFilter);
             }
-            for (DestinationTransformer destinationTransformer : destinationEndpoint.getTransformers()) {
-                destinationTransformer.setDestinationEndpoint(destinationEndpoint);
+            for (Transformer destinationTransformer : destinationEndpoint.getTransformers()) {
+                destinationTransformer.setEndpoint(destinationEndpoint);
                 destinationEndpoint.addTransformer(destinationTransformer);
             }
-            for (DestinationConfig destinationConfig : destinationEndpoint.getConfigurations()) {
-                destinationConfig.setDestinationEndpoint(destinationEndpoint);
+            for (EndpointConfig destinationConfig : destinationEndpoint.getConfigurations()) {
+                destinationConfig.setEndpoint(destinationEndpoint);
                 destinationEndpoint.addConfiguration(destinationConfig);
             }
             for(ResponseTransformer responseTransformer : destinationEndpoint.getResponseTransformers()){
-                responseTransformer.setDestinationEndpoint(destinationEndpoint);
+                responseTransformer.setEndpoint(destinationEndpoint);
                 destinationEndpoint.addResponseTransformer(responseTransformer);
             }
         }
@@ -144,41 +138,40 @@ public class DataPipelineHelper {
     }
 
     private void removeDestinationIds(DataPipelineDTO dataPipelineDTO) {
-        for (DestinationEndpointDTO de :dataPipelineDTO.getDestinations()){
+        for (EndpointDTO de :dataPipelineDTO.getDestinations()){
             de.setId(null);
             
-            for (DestinationFilterDTO df : de.getFilters()) {
+            for (FilterDTO df : de.getFilters()) {
                 df.setId(null);
             }
             
-            for (DestinationTransformerDTO dt : de.getTransformers()) {
+            for (TransformerDTO dt : de.getTransformers()) {
                 dt.setId(null);
             }
             
-            for (DestinationConfigDTO dc : de.getConfigurations()) {
+            for (EndpointConfigDTO dc : de.getConfigurations()) {
                 dc.setId(null);
             }
-            
             for (ResponseTransformerDTO rt : de.getResponseTransformers()) {
                 rt.setId(null);
-            }
+                }
         }
     }
 
     private void removeSourceIds(DataPipelineDTO dataPipelineDTO) {
-        SourceEndpointDTO se =   dataPipelineDTO.getSource();
+        EndpointDTO se =   dataPipelineDTO.getSource();
         if(se != null){
             se.setId(null);
     
-            for (SourceConfigDTO sc : se.getConfigurations()) {
+            for (EndpointConfigDTO sc : se.getConfigurations()) {
                 sc.setId(null);
             }
             
-            for (SourceTransformerDTO st : se.getTransformers()) {
+            for (TransformerDTO st : se.getTransformers()) {
                 st.setId(null);
             }
             
-            for (SourceFilterDTO sf : se.getFilters()) {
+            for (FilterDTO sf : se.getFilters()) {
                 sf.setId(null);
             }
         }

@@ -11,7 +11,6 @@
  * Copyright (C) 2018-2019 Persistent Systems, Inc.
  */
 package io.igia.integration.configuration.domain;
-
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -42,14 +41,14 @@ import io.igia.integration.configuration.domain.enumeration.TransformerType;
 @Entity
 @Table(name = "response_transformer")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@SequenceGenerator(name = "response_transformer" , sequenceName = "response_transformer_sequence")
 @Audited
-@SequenceGenerator(name = "responseTransformer", sequenceName = "response_transformer_sequence")
 public class ResponseTransformer implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "responseTransformer")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "response_transformer")
     private Long id;
 
     @Min(value = 0)
@@ -60,49 +59,50 @@ public class ResponseTransformer implements Serializable {
     @Column(name = "transformer_type")
     private TransformerType type;
 
-    
     @Lob
+    @Column(name = "data")
     private String data;
 
+    @Column(name = "description")
     private String description;
 
     @ManyToOne
     @JsonIgnoreProperties("responseTransformers")
-    private DestinationEndpoint destinationEndpoint;
+    private Endpoint endpoint;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
-    public Integer getOrder() {
-        return order;
-    }
-
-    public void setOrder(Integer order) {
-        this.order = order;
-    }
-
-    public ResponseTransformer order(Integer order){
-        this.order = order; 
-        return this;
-    }
-
-    public TransformerType getType() {
-        return type;
-    }
-
-    public void setType(TransformerType type) {
-        this.type = type;
-    }
-
-    public ResponseTransformer type(TransformerType type){
-        this.type = type; 
-        return this;
-    }
-
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Integer getOrder() {
+        return order;
+    }
+
+    public ResponseTransformer order(Integer order) {
+        this.order = order;
+        return this;
+    }
+
+    public void setOrder(Integer order) {
+        this.order = order;
+    }
+
+    public TransformerType getType() {
+        return type;
+    }
+
+    public ResponseTransformer type(TransformerType type) {
+        this.type = type;
+        return this;
+    }
+
+    public void setType(TransformerType type) {
+        this.type = type;
     }
 
     public String getData() {
@@ -131,17 +131,17 @@ public class ResponseTransformer implements Serializable {
         this.description = description;
     }
 
-    public DestinationEndpoint getDestinationEndpoint() {
-        return destinationEndpoint;
+    public Endpoint getEndpoint() {
+        return endpoint;
     }
 
-    public ResponseTransformer destinationEndpoint(DestinationEndpoint destinationEndpoint) {
-        this.destinationEndpoint = destinationEndpoint;
+    public ResponseTransformer endpoint(Endpoint endpoint) {
+        this.endpoint = endpoint;
         return this;
     }
 
-    public void setDestinationEndpoint(DestinationEndpoint destinationEndpoint) {
-        this.destinationEndpoint = destinationEndpoint;
+    public void setEndpoint(Endpoint endpoint) {
+        this.endpoint = endpoint;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
@@ -150,14 +150,10 @@ public class ResponseTransformer implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof ResponseTransformer)) {
             return false;
         }
-        ResponseTransformer responseTransformer = (ResponseTransformer) o;
-        if (responseTransformer.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), responseTransformer.getId());
+        return id != null && id.equals(((ResponseTransformer) o).id);
     }
 
     @Override
@@ -167,8 +163,12 @@ public class ResponseTransformer implements Serializable {
 
     @Override
     public String toString() {
-        return "ResponseTransformer [id=" + id + ", order=" + order + ", type=" + type + ", data=" + data
-                + ", description=" + description + ", destinationEndpoint=" + destinationEndpoint + "]";
+        return "ResponseTransformer{" +
+            "id=" + getId() +
+            ", transformerOrder=" + getOrder() +
+            ", transformerType='" + getType() + "'" +
+            ", data='" + getData() + "'" +
+            ", description='" + getDescription() + "'" +
+            "}";
     }
-
 }

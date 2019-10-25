@@ -20,7 +20,7 @@
         {
             "fieldName": "state",
             "fieldType": "State",
-            "fieldValues": "READY,START,STOP,FAILED"
+            "fieldValues": "READY,START,STOP,FAILED,STARTING,STARTED,STOPPING,STOPPED"
         },
         {
             "fieldName": "workerService",
@@ -46,23 +46,23 @@
     "relationships": [
         {
             "relationshipType": "one-to-one",
+            "otherEntityName": "endpoint",
+            "otherEntityRelationshipName": "dataPipeline",
             "relationshipName": "source",
-            "otherEntityName": "sourceEndpoint",
             "otherEntityField": "id",
-            "ownerSide": true,
-            "otherEntityRelationshipName": "dataPipeline"
+            "ownerSide": true
         },
         {
             "relationshipType": "one-to-many",
-            "relationshipName": "destination",
-            "otherEntityName": "destinationEndpoint",
-            "otherEntityRelationshipName": "dataPipeline"
+            "otherEntityName": "endpoint",
+            "otherEntityRelationshipName": "dataPipeline",
+            "relationshipName": "destination"
         }
     ],
     "changelogDate": "20181019121554",
     "entityTableName": "data_pipeline",
     "dto": "mapstruct",
-    "pagination": "no",
+    "pagination": "pagination",
     "service": "serviceImpl",
     "jpaMetamodelFiltering": false,
     "fluentMethods": true,

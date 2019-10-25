@@ -11,7 +11,6 @@
  * Copyright (C) 2018-2019 Persistent Systems, Inc.
  */
 package io.igia.integration.configuration.domain;
-
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
@@ -40,8 +39,8 @@ public class EndpointMetadata implements Serializable {
     private static final long serialVersionUID = 7108830279977644342L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-    @SequenceGenerator(name = "sequenceGenerator", sequenceName = "endpoint_metadata_sequence")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "endpoint_metadata")
+    @SequenceGenerator(name = "endpoint_metadata" , sequenceName = "endpoint_metadata_sequence")
     private Long id;
 
     @Column(name = "igia_type")
@@ -58,7 +57,7 @@ public class EndpointMetadata implements Serializable {
 
     @Column(name = "is_mandatory")
     private Boolean isMandatory;
-
+    
     @Column(name = "created_date")
     private Instant createdDate;
 
@@ -71,9 +70,39 @@ public class EndpointMetadata implements Serializable {
     @Column(name = "modified_by")
     private String modifiedBy;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not
-    // remove
+    public Instant getCreatedDate() {
+		return createdDate;
+	}
 
+	public void setCreatedDate(Instant createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public Instant getModifiedDate() {
+		return modifiedDate;
+	}
+
+	public void setModifiedDate(Instant modifiedDate) {
+		this.modifiedDate = modifiedDate;
+	}
+
+	public String getModifiedBy() {
+		return modifiedBy;
+	}
+
+	public void setModifiedBy(String modifiedBy) {
+		this.modifiedBy = modifiedBy;
+	}
+
+	// jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
     }
@@ -146,74 +175,17 @@ public class EndpointMetadata implements Serializable {
     public void setIsMandatory(Boolean isMandatory) {
         this.isMandatory = isMandatory;
     }
-
-    public Instant getCreatedDate() {
-        return createdDate;
-    }
-
-    public EndpointMetadata createdDate(Instant createdDate) {
-        this.createdDate = createdDate;
-        return this;
-    }
-
-    public void setCreatedDate(Instant createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public EndpointMetadata createdBy(String createdBy) {
-        this.createdBy = createdBy;
-        return this;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public Instant getModifiedDate() {
-        return modifiedDate;
-    }
-
-    public EndpointMetadata modifiedDate(Instant modifiedDate) {
-        this.modifiedDate = modifiedDate;
-        return this;
-    }
-
-    public void setModifiedDate(Instant modifiedDate) {
-        this.modifiedDate = modifiedDate;
-    }
-
-    public String getModifiedBy() {
-        return modifiedBy;
-    }
-
-    public EndpointMetadata modifiedBy(String modifiedBy) {
-        this.modifiedBy = modifiedBy;
-        return this;
-    }
-
-    public void setModifiedBy(String modifiedBy) {
-        this.modifiedBy = modifiedBy;
-    }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters
-    // and setters here, do not remove
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof EndpointMetadata)) {
             return false;
         }
-        EndpointMetadata endpointMetadata = (EndpointMetadata) o;
-        if (endpointMetadata.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), endpointMetadata.getId());
+        return id != null && id.equals(((EndpointMetadata) o).id);
     }
 
     @Override
@@ -223,10 +195,13 @@ public class EndpointMetadata implements Serializable {
 
     @Override
     public String toString() {
-        return "EndpointMetadata [id=" + id + ", type=" + type + ", category=" + category + ", property=" + property
-                + ", isEncrypted=" + isEncrypted + ", isMandatory=" + isMandatory + ", createdDate=" + createdDate
-                + ", createdBy=" + createdBy + ", modifiedDate=" + modifiedDate + ", modifiedBy=" + modifiedBy + "]";
+        return "EndpointMetadata{" +
+            "id=" + getId() +
+            ", type='" + getType() + "'" +
+            ", category='" + getCategory() + "'" +
+            ", property='" + getProperty() + "'" +
+            ", isEncrypted='" + isIsEncrypted() + "'" +
+            ", isMandatory='" + isIsMandatory() + "'" +
+            "}";
     }
-
-    
 }

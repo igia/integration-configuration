@@ -1,0 +1,31 @@
+{
+    "name": "EndpointConfig",
+    "fields": [
+        {
+            "fieldName": "configKey",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "configValue",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipName": "endpoint",
+            "otherEntityName": "endpoint",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20190807132727",
+    "entityTableName": "endpoint_config",
+    "dto": "mapstruct",
+    "pagination": "no",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "integrationconfiguration",
+    "applications": "*",
+    "microserviceName": "integrationconfiguration"
+}

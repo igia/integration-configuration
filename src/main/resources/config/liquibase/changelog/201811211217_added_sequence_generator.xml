@@ -24,42 +24,34 @@
         <createSequence sequenceName="datapipeline_sequence" startValue="5000" incrementBy="50"/>
     </changeSet>
    
-    <changeSet id="destination_config_sequence" author="jhipster">
-        <createSequence sequenceName="destination_config_sequence" startValue="5000" incrementBy="50"/>
-    </changeSet>
-   
-    <changeSet id="destination_endpoint_sequence" author="jhipster">
-        <createSequence sequenceName="destination_endpoint_sequence" startValue="5000" incrementBy="50"/>
-    </changeSet>
-   
-    <changeSet id="destination_filter_sequence" author="jhipster">
-        <createSequence sequenceName="destination_filter_sequence" startValue="5000" incrementBy="50"/>
+    <changeSet id="endpoint_sequence" author="jhipster">
+        <createSequence sequenceName="endpoint_sequence" startValue="5000" incrementBy="50"/>
     </changeSet>  
    
-    <changeSet id="destination_transformer_sequence" author="jhipster">
-        <createSequence sequenceName="destination_transformer_sequence" startValue="5000" incrementBy="50"/>
+    <changeSet id="transformer_sequence" author="jhipster">
+        <createSequence sequenceName="transformer_sequence" startValue="5000" incrementBy="50"/>
     </changeSet> 
    
-    <changeSet id="source_config_sequence" author="jhipster">
-        <createSequence sequenceName="source_config_sequence" startValue="5000" incrementBy="50"/>
+    <changeSet id="endpoint_config_sequence" author="jhipster">
+        <createSequence sequenceName="endpoint_config_sequence" startValue="5000" incrementBy="50"/>
     </changeSet> 
    
-    <changeSet id="source_endpoint_sequence" author="jhipster">
-        <createSequence sequenceName="source_endpoint_sequence" startValue="5000" incrementBy="50"/>
-    </changeSet>    
-   
-    <changeSet id="source_filter_sequence" author="jhipster">
-        <createSequence sequenceName="source_filter_sequence" startValue="5000" incrementBy="50"/>
+    <changeSet id="filter_sequence" author="jhipster">
+        <createSequence sequenceName="filter_sequence" startValue="5000" incrementBy="50"/>
     </changeSet>
-   
-    <changeSet id="source_transformer_sequence" author="jhipster">
-        <createSequence sequenceName="source_transformer_sequence" startValue="5000" incrementBy="50"/>
-    </changeSet> 
+    
+    <changeSet id="response_transformer_sequence" author="jhipster">
+        <createSequence sequenceName="response_transformer_sequence" startValue="5000" incrementBy="50"/>
+    </changeSet>
    
     <changeSet id="endpoint_metadata_sequence" author="jhipster">
         <createSequence sequenceName="endpoint_metadata_sequence" startValue="5000" incrementBy="50"/>
     </changeSet> 
    
+    <changeSet id="audit_event_sequence" author="jhipster">
+        <createSequence sequenceName="audit_event_sequence" startValue="5000" incrementBy="50"/>
+    </changeSet>
+    
     <changeSet id="audit_event" author="jhipster">
         <createSequence sequenceName="audit_event" startValue="5000" incrementBy="50"/>
     </changeSet>

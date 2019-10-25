@@ -44,16 +44,11 @@ import io.igia.integration.configuration.domain.enumeration.TransformerType;
 import io.igia.integration.configuration.repository.DataPipelineRepository;
 import io.igia.integration.configuration.service.EndpointMetadataService;
 import io.igia.integration.configuration.service.dto.DataPipelineDTO;
-import io.igia.integration.configuration.service.dto.DestinationConfigDTO;
-import io.igia.integration.configuration.service.dto.DestinationEndpointDTO;
-import io.igia.integration.configuration.service.dto.DestinationFilterDTO;
-import io.igia.integration.configuration.service.dto.DestinationTransformerDTO;
+import io.igia.integration.configuration.service.dto.EndpointConfigDTO;
+import io.igia.integration.configuration.service.dto.EndpointDTO;
 import io.igia.integration.configuration.service.dto.EndpointMetadataDTO;
-import io.igia.integration.configuration.service.dto.SourceConfigDTO;
-import io.igia.integration.configuration.service.dto.SourceEndpointDTO;
-import io.igia.integration.configuration.service.dto.SourceFilterDTO;
-import io.igia.integration.configuration.service.dto.SourceTransformerDTO;
-import io.igia.integration.configuration.validator.DataPipelineValidator;
+import io.igia.integration.configuration.service.dto.FilterDTO;
+import io.igia.integration.configuration.service.dto.TransformerDTO;
 import io.igia.integration.configuration.web.rest.errors.CustomParameterizedException;
 import io.igia.integration.configuration.web.rest.errors.ErrorConstants;
 
@@ -90,21 +85,21 @@ public class DataPipelineValidatorTest {
 
     private DataPipelineDTO createEntity() {
 
-        Set<SourceConfigDTO> sourceConfigs = createSourceConfigs();
+        Set<EndpointConfigDTO> sourceConfigs = createHttpSourceConfigs();
 
-        Set<SourceFilterDTO> sourceFilters = createSourceFilters();
+        Set<FilterDTO> sourceFilters = createSourceFilters();
 
-        Set<SourceTransformerDTO> sourceTransformers = createSourceTransformers();
+        Set<TransformerDTO> sourceTransformers = createSourceTransformers();
 
-        SourceEndpointDTO sourceEndpoint = createSourceEndpoint(sourceConfigs, sourceFilters, sourceTransformers);
+        EndpointDTO sourceEndpoint = createMllpEndpoint(sourceConfigs, sourceFilters, sourceTransformers);
 
-        Set<DestinationConfigDTO> destinationConfigs = createDestinationConfig();
+        Set<EndpointConfigDTO> destinationConfigs = createFileDestinationConfig();
 
-        Set<DestinationFilterDTO> destinationFilters = createDestinationFilter();
+        Set<FilterDTO> destinationFilters = createDestinationFilter();
 
-        Set<DestinationTransformerDTO> destinationTransformers = createDestinationTransformer();
+        Set<TransformerDTO> destinationTransformers = createDestinationTransformer();
 
-        Set<DestinationEndpointDTO> destinationEndpoints = createDestinationEndpoint(destinationConfigs,
+        Set<EndpointDTO> destinationEndpoints = createFileDestinationEndpoint(destinationConfigs,
                 destinationFilters, destinationTransformers);
 
         DataPipelineDTO dataPipeline = createDataPipeline(sourceEndpoint, destinationEndpoints);
@@ -112,29 +107,19 @@ public class DataPipelineValidatorTest {
         return dataPipeline;
     }
 
-    private DataPipelineDTO createDataPipelineWithHTTPEndpoint() {
-        Set<SourceConfigDTO> sourceConfigs = createSourceConfigs();
-        Set<SourceFilterDTO> sourceFilters = new HashSet<>();
-        Set<SourceTransformerDTO> sourceTransformers = new HashSet<>();
-        SourceEndpointDTO sourceEndpoint = new SourceEndpointDTO();
-        sourceEndpoint.setInDataType(InDataType.JSON);
-        sourceEndpoint.setOutDataType(OutDataType.JSON);
-        sourceEndpoint.setName("HTTP Source");
-        sourceEndpoint.setConfigurations(sourceConfigs);
-        sourceEndpoint.setType(EndpointType.HTTP);
-        sourceEndpoint.setFilters(sourceFilters);
-        sourceEndpoint.setTransformers(sourceTransformers);
-
-        Set<DestinationConfigDTO> destinationConfigs = createDestinationConfig();
-        Set<DestinationFilterDTO> destinationFilters = new HashSet<>();
-        Set<DestinationTransformerDTO> destinationTransformers = new HashSet<>();
-        Set<DestinationEndpointDTO> destinationEndpoints = createDestinationEndpoint(destinationConfigs,destinationFilters, destinationTransformers);
+    private DataPipelineDTO createDataPipelineWithHttpEndpoint() {
+        EndpointDTO sourceEndpoint = createHttpSourceEndpoint();
+        
+        Set<EndpointConfigDTO> destinationConfigs = createFileDestinationConfig();
+        Set<FilterDTO> destinationFilters = new HashSet<>();
+        Set<TransformerDTO> destinationTransformers = new HashSet<>();
+        Set<EndpointDTO> destinationEndpoints = createFileDestinationEndpoint(destinationConfigs,destinationFilters, destinationTransformers);
         DataPipelineDTO dataPipeline = createDataPipeline(sourceEndpoint, destinationEndpoints);
         return dataPipeline;
     }
 
-    private DataPipelineDTO createDataPipeline(SourceEndpointDTO sourceEndpoint,
-            Set<DestinationEndpointDTO> destinationEndpoints) {
+    private DataPipelineDTO createDataPipeline(EndpointDTO sourceEndpoint,
+            Set<EndpointDTO> destinationEndpoints) {
         DataPipelineDTO dataPipeline = new DataPipelineDTO();
         dataPipeline.setName("MLLP to Source");
         dataPipeline.setDescription("MLLP to Source");
@@ -144,10 +129,11 @@ public class DataPipelineValidatorTest {
         return dataPipeline;
     }
 
-    private Set<DestinationEndpointDTO> createDestinationEndpoint(Set<DestinationConfigDTO> destinationConfigs,
-            Set<DestinationFilterDTO> destinationFilters, Set<DestinationTransformerDTO> destinationTransformers) {
-        Set<DestinationEndpointDTO> destinationEndpoints = new HashSet<>();
-        DestinationEndpointDTO destinationEndpoint = new DestinationEndpointDTO();
+    // FILE 
+    private Set<EndpointDTO> createFileDestinationEndpoint(Set<EndpointConfigDTO> destinationConfigs,
+            Set<FilterDTO> destinationFilters, Set<TransformerDTO> destinationTransformers) {
+        Set<EndpointDTO> destinationEndpoints = new HashSet<>();
+        EndpointDTO destinationEndpoint = new EndpointDTO();
         destinationEndpoint.setInDataType(InDataType.HL7_V2);
         destinationEndpoint.setOutDataType(OutDataType.HL7_V2);
         destinationEndpoint.setName("FILE Destiantion");
@@ -158,116 +144,22 @@ public class DataPipelineValidatorTest {
         destinationEndpoints.add(destinationEndpoint);
         return destinationEndpoints;
     }
-
-    private Set<DestinationTransformerDTO> createDestinationTransformer() {
-        Set<DestinationTransformerDTO> destinationTransformers = new HashSet<>();
-        DestinationTransformerDTO destinationTransformerDTO = new DestinationTransformerDTO();
-        destinationTransformerDTO.setOrder(0);
-        destinationTransformerDTO.setData("Write javascript here");
-        destinationTransformerDTO.setDescription("Destination Transformer");
-        destinationTransformerDTO.setType(TransformerType.JAVASCRIPT);
-        destinationTransformers.add(destinationTransformerDTO);
-        return destinationTransformers;
-    }
-
-    private Set<DestinationFilterDTO> createDestinationFilter() {
-        Set<DestinationFilterDTO> destinationFilters = new HashSet<>();
-        DestinationFilterDTO destinationFilterDTO = new DestinationFilterDTO();
-        destinationFilterDTO.setOrder(0);
-        destinationFilterDTO.setDescription("Destination Filter");
-        destinationFilterDTO.setData("Write javascript here");
-        destinationFilterDTO.setType(FilterType.JAVASCRIPT);
-        destinationFilters.add(destinationFilterDTO);
-        return destinationFilters;
-    }
-
-    private Set<DestinationConfigDTO> createDestinationConfig() {
-        Set<DestinationConfigDTO> destinationConfigs = new HashSet<>();
-        DestinationConfigDTO destinationConfig = new DestinationConfigDTO();
+    
+    private Set<EndpointConfigDTO> createFileDestinationConfig() {
+        Set<EndpointConfigDTO> destinationConfigs = new HashSet<>();
+        EndpointConfigDTO destinationConfig = new EndpointConfigDTO();
         destinationConfig.setKey("directoryName");
         destinationConfig.setValue("directoryName");
         destinationConfigs.add(destinationConfig);
 
-        destinationConfig = new DestinationConfigDTO();
+        destinationConfig = new EndpointConfigDTO();
         destinationConfig.setKey("fileName");
         destinationConfig.setValue("fileName");
         destinationConfigs.add(destinationConfig);
         return destinationConfigs;
     }
-
-    private SourceEndpointDTO createSourceEndpoint(Set<SourceConfigDTO> sourceConfigs,
-            Set<SourceFilterDTO> sourceFilters, Set<SourceTransformerDTO> sourceTransformers) {
-        SourceEndpointDTO sourceEndpoint = new SourceEndpointDTO();
-        sourceEndpoint.setInDataType(InDataType.HL7_V2);
-        sourceEndpoint.setOutDataType(OutDataType.HL7_V2);
-        sourceEndpoint.setName("MLLP Source");
-        sourceEndpoint.setConfigurations(sourceConfigs);
-        sourceEndpoint.setType(EndpointType.MLLP);
-        sourceEndpoint.setFilters(sourceFilters);
-        sourceEndpoint.setTransformers(sourceTransformers);
-        return sourceEndpoint;
-    }
-
-    private Set<SourceTransformerDTO> createSourceTransformers() {
-        Set<SourceTransformerDTO> sourceTransformers = new HashSet<>();
-        SourceTransformerDTO transformerDTO = new SourceTransformerDTO();
-        transformerDTO.setOrder(0);
-        transformerDTO.setData("Write java script here");
-        transformerDTO.setType(TransformerType.JAVASCRIPT);
-        transformerDTO.setDescription("This is souce transformer");
-        sourceTransformers.add(transformerDTO);
-        return sourceTransformers;
-    }
-
-    private Set<SourceFilterDTO> createSourceFilters() {
-        Set<SourceFilterDTO> sourceFilters = new HashSet<>();
-        SourceFilterDTO sourceFilterDTO = new SourceFilterDTO();
-        sourceFilterDTO.setData("Write java script here");
-        sourceFilterDTO.setOrder(0);
-        sourceFilterDTO.setType(FilterType.JAVASCRIPT);
-        sourceFilterDTO.setDescription("This is source filter");
-        sourceFilters.add(sourceFilterDTO);
-        return sourceFilters;
-    }
-
-    private Set<SourceConfigDTO> createSourceConfigs() {
-        Set<SourceConfigDTO> sourceConfigs = new HashSet<>();
-        
-        SourceConfigDTO sourceConfig = new SourceConfigDTO();
-        sourceConfig.setKey("hostname");
-        sourceConfig.setValue("hostname");
-        sourceConfigs.add(sourceConfig);
-
-        sourceConfig = new SourceConfigDTO();
-        sourceConfig.setKey("port");
-        sourceConfig.setValue("9080");
-        sourceConfigs.add(sourceConfig);
-        return sourceConfigs;
-    }
-
-    private List<EndpointMetadataDTO> getSourceMetadaForMandatoryFields() {
-        List<EndpointMetadataDTO> sourceEndpointMetadataDTOs = new ArrayList<>();
-
-        EndpointMetadataDTO sourceEndpointMetadataDTO = new EndpointMetadataDTO();
-        sourceEndpointMetadataDTO.setCategory(Category.SOURCE.name());
-        sourceEndpointMetadataDTO.setType(EndpointType.MLLP.name());
-        sourceEndpointMetadataDTO.setProperty("hostname");
-        sourceEndpointMetadataDTO.setIsMandatory(true);
-
-        sourceEndpointMetadataDTOs.add(sourceEndpointMetadataDTO);
-
-        sourceEndpointMetadataDTO = new EndpointMetadataDTO();
-        sourceEndpointMetadataDTO.setCategory(Category.SOURCE.name());
-        sourceEndpointMetadataDTO.setType(EndpointType.MLLP.name());
-        sourceEndpointMetadataDTO.setProperty("port");
-        sourceEndpointMetadataDTO.setIsMandatory(true);
-
-        sourceEndpointMetadataDTOs.add(sourceEndpointMetadataDTO);
-
-        return sourceEndpointMetadataDTOs;
-    }
-
-    private List<EndpointMetadataDTO> getDestinationMetadaForMandatoryFields() {
+    
+    private List<EndpointMetadataDTO> getFileDestinationMetadaForMandatoryFields() {
         List<EndpointMetadataDTO> sourceEndpointMetadataDTOs = new ArrayList<>();
 
         EndpointMetadataDTO sourceEndpointMetadataDTO = new EndpointMetadataDTO();
@@ -289,7 +181,114 @@ public class DataPipelineValidatorTest {
         return sourceEndpointMetadataDTOs;
     }
 
-    private List<EndpointMetadataDTO> getSourceMetadaForMandatoryFieldsHTTP() {
+    //MLLP
+    private EndpointDTO createMllpEndpoint(Set<EndpointConfigDTO> sourceConfigs,
+            Set<FilterDTO> sourceFilters, Set<TransformerDTO> sourceTransformers) {
+        EndpointDTO sourceEndpoint = new EndpointDTO();
+        sourceEndpoint.setInDataType(InDataType.HL7_V2);
+        sourceEndpoint.setOutDataType(OutDataType.HL7_V2);
+        sourceEndpoint.setName("MLLP Source");
+        sourceEndpoint.setConfigurations(sourceConfigs);
+        sourceEndpoint.setType(EndpointType.MLLP);
+        sourceEndpoint.setFilters(sourceFilters);
+        sourceEndpoint.setTransformers(sourceTransformers);
+        return sourceEndpoint;
+    }
+    
+    private List<EndpointMetadataDTO> getMllpSourceMetadaForMandatoryFields() {
+        List<EndpointMetadataDTO> sourceEndpointMetadataDTOs = new ArrayList<>();
+
+        EndpointMetadataDTO sourceEndpointMetadataDTO = new EndpointMetadataDTO();
+        sourceEndpointMetadataDTO.setCategory(Category.SOURCE.name());
+        sourceEndpointMetadataDTO.setType(EndpointType.MLLP.name());
+        sourceEndpointMetadataDTO.setProperty("hostname");
+        sourceEndpointMetadataDTO.setIsMandatory(true);
+
+        sourceEndpointMetadataDTOs.add(sourceEndpointMetadataDTO);
+
+        sourceEndpointMetadataDTO = new EndpointMetadataDTO();
+        sourceEndpointMetadataDTO.setCategory(Category.SOURCE.name());
+        sourceEndpointMetadataDTO.setType(EndpointType.MLLP.name());
+        sourceEndpointMetadataDTO.setProperty("port");
+        sourceEndpointMetadataDTO.setIsMandatory(true);
+
+        sourceEndpointMetadataDTOs.add(sourceEndpointMetadataDTO);
+
+        return sourceEndpointMetadataDTOs;
+    }
+    
+    private Set<EndpointConfigDTO> createMLLPConfig(){
+        Set<EndpointConfigDTO> configs = new HashSet<EndpointConfigDTO>();
+        
+        EndpointConfigDTO config = new EndpointConfigDTO();
+        config.setKey("hostname"); config.setValue("localhost");
+        configs.add(config);
+        
+        config = new EndpointConfigDTO();
+        config.setKey("port"); config.setValue("7000");
+        configs.add(config);
+        return configs;
+     }
+    
+    //HTTP
+    private Set<EndpointConfigDTO> createHttpSourceConfigs() {
+        Set<EndpointConfigDTO> sourceConfigs = new HashSet<>();
+        
+        EndpointConfigDTO sourceConfig = new EndpointConfigDTO();
+        sourceConfig.setKey("hostname");
+        sourceConfig.setValue("hostname");
+        sourceConfigs.add(sourceConfig);
+
+        sourceConfig = new EndpointConfigDTO();
+        sourceConfig.setKey("port");
+        sourceConfig.setValue("9080");
+        sourceConfigs.add(sourceConfig);
+        
+        sourceConfig = new EndpointConfigDTO();
+        sourceConfig.setKey("isSecure");
+        sourceConfig.setValue("true");
+        sourceConfigs.add(sourceConfig);
+        
+        sourceConfig = new EndpointConfigDTO();
+        sourceConfig.setKey("username");
+        sourceConfig.setValue("admin");
+        sourceConfigs.add(sourceConfig);
+        
+        sourceConfig = new EndpointConfigDTO();
+        sourceConfig.setKey("password");
+        sourceConfig.setValue("password");
+        sourceConfigs.add(sourceConfig);
+        
+        sourceConfig = new EndpointConfigDTO();
+        sourceConfig.setKey("resourceUri");
+        sourceConfig.setValue("/test");
+        sourceConfigs.add(sourceConfig);
+        
+        return sourceConfigs;
+    }
+    
+    private Set<EndpointConfigDTO> createHttpDestinationConfigs() {
+        Set<EndpointConfigDTO> sourceConfigs = new HashSet<>();
+        
+        EndpointConfigDTO sourceConfig = new EndpointConfigDTO();
+        sourceConfig.setKey("hostname");
+        sourceConfig.setValue("hostname");
+        sourceConfigs.add(sourceConfig);
+
+        sourceConfig = new EndpointConfigDTO();
+        sourceConfig.setKey("port");
+        sourceConfig.setValue("9080");
+        sourceConfigs.add(sourceConfig);
+
+        sourceConfig = new EndpointConfigDTO();
+        sourceConfig.setKey("resourceUri");
+        sourceConfig.setValue("/test");
+        sourceConfigs.add(sourceConfig);
+
+        return sourceConfigs;
+    }
+    
+    private List<EndpointMetadataDTO> getHttpSourceMetadaForMandatoryFields() {
         List<EndpointMetadataDTO> sourceEndpointMetadataDTOs = new ArrayList<>();
 
         EndpointMetadataDTO sourceEndpointMetadataDTO = new EndpointMetadataDTO();
@@ -319,17 +318,95 @@ public class DataPipelineValidatorTest {
         sourceEndpointMetadataDTO.setProperty("password");
         sourceEndpointMetadataDTO.setIsMandatory(true);
         sourceEndpointMetadataDTOs.add(sourceEndpointMetadataDTO);
+        
+        sourceEndpointMetadataDTO = new EndpointMetadataDTO();
+        sourceEndpointMetadataDTO.setCategory(Category.SOURCE.name());
+        sourceEndpointMetadataDTO.setType(EndpointType.HTTP.name());
+        sourceEndpointMetadataDTO.setProperty("isSecure");
+        sourceEndpointMetadataDTO.setIsMandatory(true);
+        sourceEndpointMetadataDTOs.add(sourceEndpointMetadataDTO);
 
         return sourceEndpointMetadataDTOs;
     }
+    
+    private EndpointDTO createHttpSourceEndpoint(){
+        EndpointDTO sourceEndpoint = new EndpointDTO();
+        sourceEndpoint.setInDataType(InDataType.JSON);
+        sourceEndpoint.setName("HTTP Source");
+        sourceEndpoint.setType(EndpointType.HTTP);
+        sourceEndpoint.setOutDataType(OutDataType.JSON);
+        Set<EndpointConfigDTO> configs =  createHttpSourceConfigs();
+        sourceEndpoint.setConfigurations(configs);
+        return sourceEndpoint;
+     }
+    
+    private EndpointDTO createHttpDestinationEndpoint(){
+        EndpointDTO destEndpoint = new EndpointDTO();
+        destEndpoint.setInDataType(InDataType.JSON);
+        destEndpoint.setName("HTTP Source");
+        destEndpoint.setType(EndpointType.HTTP);
+        destEndpoint.setOutDataType(OutDataType.JSON);
+        
+        Set<EndpointConfigDTO> configs = createHttpDestinationConfigs();
+        destEndpoint.setConfigurations(configs);
+        return destEndpoint;
+     }
+    
+    
+    //Transformer
+    private Set<TransformerDTO> createDestinationTransformer() {
+        Set<TransformerDTO> destinationTransformers = new HashSet<>();
+        TransformerDTO destinationTransformerDTO = new TransformerDTO();
+        destinationTransformerDTO.setOrder(0);
+        destinationTransformerDTO.setData("Write javascript here");
+        destinationTransformerDTO.setDescription("Destination Transformer");
+        destinationTransformerDTO.setType(TransformerType.JAVASCRIPT);
+        destinationTransformers.add(destinationTransformerDTO);
+        return destinationTransformers;
+    }
+    
+    private Set<TransformerDTO> createSourceTransformers() {
+        Set<TransformerDTO> sourceTransformers = new HashSet<>();
+        TransformerDTO transformerDTO = new TransformerDTO();
+        transformerDTO.setOrder(0);
+        transformerDTO.setData("Write java script here");
+        transformerDTO.setType(TransformerType.JAVASCRIPT);
+        transformerDTO.setDescription("This is souce transformer");
+        sourceTransformers.add(transformerDTO);
+        return sourceTransformers;
+    }
 
+    //Filter
+    private Set<FilterDTO> createDestinationFilter() {
+        Set<FilterDTO> destinationFilters = new HashSet<>();
+        FilterDTO destinationFilterDTO = new FilterDTO();
+        destinationFilterDTO.setOrder(0);
+        destinationFilterDTO.setDescription("Destination Filter");
+        destinationFilterDTO.setData("Write javascript here");
+        destinationFilterDTO.setType(FilterType.JAVASCRIPT);
+        destinationFilters.add(destinationFilterDTO);
+        return destinationFilters;
+    }
+
+    private Set<FilterDTO> createSourceFilters() {
+        Set<FilterDTO> sourceFilters = new HashSet<>();
+        FilterDTO sourceFilterDTO = new FilterDTO();
+        sourceFilterDTO.setData("Write java script here");
+        sourceFilterDTO.setOrder(0);
+        sourceFilterDTO.setType(FilterType.JAVASCRIPT);
+        sourceFilterDTO.setDescription("This is source filter");
+        sourceFilters.add(sourceFilterDTO);
+        return sourceFilters;
+    }
+
+    // Test cases 
     @Test(expected = CustomParameterizedException.class)
     public void testValidateSourceConfigs() {
 
         DataPipelineDTO dataPipelineDTO = createEntity();
-        Set<SourceConfigDTO> sourceConfigs = new HashSet<>();
+        Set<EndpointConfigDTO> sourceConfigs = new HashSet<>();
         dataPipelineDTO.getSource().setConfigurations(sourceConfigs);
-        List<EndpointMetadataDTO> sourceEndpointMetadataDTO = getSourceMetadaForMandatoryFields();
+        List<EndpointMetadataDTO> sourceEndpointMetadataDTO = getMllpSourceMetadaForMandatoryFields();
 
         Mockito.when(dataPipelineRepository.existsByNameIgnoreCase(dataPipelineDTO.getName())).thenReturn(false);
         Mockito.when(endpointMetadataService.findAllByTypeAndCategoryAndIsMandatory(EndpointType.MLLP.name(),
@@ -342,9 +419,9 @@ public class DataPipelineValidatorTest {
     public void testValidateSourceConfigsExceptionMessage() {
 
         DataPipelineDTO dataPipelineDTO = createEntity();
-        Set<SourceConfigDTO> sourceConfigs = new HashSet<>();
+        Set<EndpointConfigDTO> sourceConfigs = new HashSet<>();
         dataPipelineDTO.getSource().setConfigurations(sourceConfigs);
-        List<EndpointMetadataDTO> sourceEndpointMetadataDTO = getSourceMetadaForMandatoryFields();
+        List<EndpointMetadataDTO> sourceEndpointMetadataDTO = getMllpSourceMetadaForMandatoryFields();
 
         Mockito.when(dataPipelineRepository.existsByNameIgnoreCase(dataPipelineDTO.getName())).thenReturn(false);
 
@@ -363,16 +440,16 @@ public class DataPipelineValidatorTest {
     public void testValidateDestinationConfigs() {
 
         DataPipelineDTO dataPipelineDTO = createEntity();
-        Set<DestinationEndpointDTO> destinations = dataPipelineDTO.getDestinations();
-        for (DestinationEndpointDTO destination : destinations) {
-            Set<DestinationConfigDTO> destinationConfigs = new HashSet<>();
+        Set<EndpointDTO> destinations = dataPipelineDTO.getDestinations();
+        for (EndpointDTO destination : destinations) {
+            Set<EndpointConfigDTO> destinationConfigs = new HashSet<>();
             destination.setConfigurations(destinationConfigs);
         }
 
         dataPipelineDTO.setDestinations(destinations);
 
-        List<EndpointMetadataDTO> sourceEndpointMetadataDTO = getSourceMetadaForMandatoryFields();
-        List<EndpointMetadataDTO> destinationEndpointMetadataDTO = getDestinationMetadaForMandatoryFields();
+        List<EndpointMetadataDTO> sourceEndpointMetadataDTO = getMllpSourceMetadaForMandatoryFields();
+        List<EndpointMetadataDTO> destinationEndpointMetadataDTO = getFileDestinationMetadaForMandatoryFields();
 
         Mockito.when(dataPipelineRepository.existsByNameIgnoreCase(dataPipelineDTO.getName())).thenReturn(false);
 
@@ -389,16 +466,16 @@ public class DataPipelineValidatorTest {
     public void testValidateDestinationConfigsExceptionMessage() {
 
         DataPipelineDTO dataPipelineDTO = createEntity();
-        Set<DestinationEndpointDTO> destinations = dataPipelineDTO.getDestinations();
-        for (DestinationEndpointDTO destination : destinations) {
-            Set<DestinationConfigDTO> destinationConfigs = new HashSet<>();
+        Set<EndpointDTO> destinations = dataPipelineDTO.getDestinations();
+        for (EndpointDTO destination : destinations) {
+            Set<EndpointConfigDTO> destinationConfigs = new HashSet<>();
             destination.setConfigurations(destinationConfigs);
         }
 
         dataPipelineDTO.setDestinations(destinations);
 
-        List<EndpointMetadataDTO> sourceEndpointMetadataDTO = getSourceMetadaForMandatoryFields();
-        List<EndpointMetadataDTO> destinationEndpointMetadataDTO = getDestinationMetadaForMandatoryFields();
+        List<EndpointMetadataDTO> sourceEndpointMetadataDTO = getMllpSourceMetadaForMandatoryFields();
+        List<EndpointMetadataDTO> destinationEndpointMetadataDTO = getFileDestinationMetadaForMandatoryFields();
 
         Mockito.when(dataPipelineRepository.existsByNameIgnoreCase(dataPipelineDTO.getName())).thenReturn(false);
 
@@ -419,7 +496,7 @@ public class DataPipelineValidatorTest {
     public void testSourceFilterValidation() {
         DataPipelineDTO dataPipelineDTO = createEntity();
 
-        SourceFilterDTO sourceFilterDTO = new SourceFilterDTO();
+        FilterDTO sourceFilterDTO = new FilterDTO();
         sourceFilterDTO.setData("Write java script here");
         sourceFilterDTO.setOrder(0);
         sourceFilterDTO.setType(FilterType.JAVASCRIPT);
@@ -427,7 +504,7 @@ public class DataPipelineValidatorTest {
 
         dataPipelineDTO.getSource().getFilters().add(sourceFilterDTO);
 
-        List<EndpointMetadataDTO> sourceEndpointMetadataDTO = getSourceMetadaForMandatoryFields();
+        List<EndpointMetadataDTO> sourceEndpointMetadataDTO = getMllpSourceMetadaForMandatoryFields();
 
         Mockito.when(dataPipelineRepository.existsByNameIgnoreCase(dataPipelineDTO.getName())).thenReturn(false);
 
@@ -449,7 +526,7 @@ public class DataPipelineValidatorTest {
     public void testSourceTransformerValidation() {
         DataPipelineDTO dataPipelineDTO = createEntity();
 
-        SourceTransformerDTO transformerDTO = new SourceTransformerDTO();
+        TransformerDTO transformerDTO = new TransformerDTO();
         transformerDTO.setOrder(0);
         transformerDTO.setData("Write java script here");
         transformerDTO.setType(TransformerType.JAVASCRIPT);
@@ -457,7 +534,7 @@ public class DataPipelineValidatorTest {
 
         dataPipelineDTO.getSource().getTransformers().add(transformerDTO);
 
-        List<EndpointMetadataDTO> sourceEndpointMetadataDTO = getSourceMetadaForMandatoryFields();
+        List<EndpointMetadataDTO> sourceEndpointMetadataDTO = getMllpSourceMetadaForMandatoryFields();
 
         Mockito.when(dataPipelineRepository.existsByNameIgnoreCase(dataPipelineDTO.getName())).thenReturn(false);
 
@@ -479,20 +556,20 @@ public class DataPipelineValidatorTest {
     public void testDestinationFilterValidation() {
         DataPipelineDTO dataPipelineDTO = createEntity();
 
-        DestinationFilterDTO destinationFilterDTO = new DestinationFilterDTO();
+        FilterDTO destinationFilterDTO = new FilterDTO();
         destinationFilterDTO.setOrder(0);
         destinationFilterDTO.setDescription("Destination Filter");
         destinationFilterDTO.setData("Write javascript here");
         destinationFilterDTO.setType(FilterType.JAVASCRIPT);
 
-        Set<DestinationEndpointDTO> destinations = dataPipelineDTO.getDestinations();
-        for (DestinationEndpointDTO destinationEndpointDTO : destinations) {
+        Set<EndpointDTO> destinations = dataPipelineDTO.getDestinations();
+        for (EndpointDTO destinationEndpointDTO : destinations) {
 
             destinationEndpointDTO.getFilters().add(destinationFilterDTO);
         }
 
-        List<EndpointMetadataDTO> sourceEndpointMetadataDTO = getSourceMetadaForMandatoryFields();
-        List<EndpointMetadataDTO> destinationEndpointMetadataDTO = getDestinationMetadaForMandatoryFields();
+        List<EndpointMetadataDTO> sourceEndpointMetadataDTO = getMllpSourceMetadaForMandatoryFields();
+        List<EndpointMetadataDTO> destinationEndpointMetadataDTO = getFileDestinationMetadaForMandatoryFields();
 
         Mockito.when(dataPipelineRepository.existsByNameIgnoreCase(dataPipelineDTO.getName())).thenReturn(false);
 
@@ -517,20 +594,20 @@ public class DataPipelineValidatorTest {
     public void testDestinationTransformerValidation() {
         DataPipelineDTO dataPipelineDTO = createEntity();
 
-        DestinationTransformerDTO destinationTransformerDTO = new DestinationTransformerDTO();
+        TransformerDTO destinationTransformerDTO = new TransformerDTO();
         destinationTransformerDTO.setOrder(0);
         destinationTransformerDTO.setData("Write javascript here");
         destinationTransformerDTO.setDescription("Destination Transformer");
         destinationTransformerDTO.setType(TransformerType.JAVASCRIPT);
 
-        Set<DestinationEndpointDTO> destinations = dataPipelineDTO.getDestinations();
-        for (DestinationEndpointDTO destinationEndpointDTO : destinations) {
+        Set<EndpointDTO> destinations = dataPipelineDTO.getDestinations();
+        for (EndpointDTO destinationEndpointDTO : destinations) {
 
             destinationEndpointDTO.getTransformers().add(destinationTransformerDTO);
         }
 
-        List<EndpointMetadataDTO> sourceEndpointMetadataDTO = getSourceMetadaForMandatoryFields();
-        List<EndpointMetadataDTO> destinationEndpointMetadataDTO = getDestinationMetadaForMandatoryFields();
+        List<EndpointMetadataDTO> sourceEndpointMetadataDTO = getMllpSourceMetadaForMandatoryFields();
+        List<EndpointMetadataDTO> destinationEndpointMetadataDTO = getFileDestinationMetadaForMandatoryFields();
 
         Mockito.when(dataPipelineRepository.existsByNameIgnoreCase(dataPipelineDTO.getName())).thenReturn(false);
 
@@ -570,9 +647,9 @@ public class DataPipelineValidatorTest {
     @Test
     public void testValidateDestinationName(){
         DataPipelineDTO dataPipelineDTO = createEntity();
-        Set<DestinationEndpointDTO>  destinations = dataPipelineDTO.getDestinations();
+        Set<EndpointDTO>  destinations = dataPipelineDTO.getDestinations();
         
-        Set<DestinationEndpointDTO> newdestinations = createDestinationEndpoint(createDestinationConfig(),
+        Set<EndpointDTO> newdestinations = createFileDestinationEndpoint(createFileDestinationConfig(),
                 createDestinationFilter(), createDestinationTransformer());
         
         destinations.addAll(newdestinations);
@@ -591,11 +668,16 @@ public class DataPipelineValidatorTest {
     @Test
     public void validateHttpConsumerConfigurations(){
         try {
-            DataPipelineDTO dataPipelineDTO = createDataPipelineWithHTTPEndpoint();
+            DataPipelineDTO dataPipelineDTO = createDataPipelineWithHttpEndpoint();
+            
+            Set<EndpointConfigDTO> sourceConfigs = new HashSet<>();
+            
+            dataPipelineDTO.getSource().setConfigurations(sourceConfigs);
+            
             Mockito.when(dataPipelineRepository.existsByNameIgnoreCase(dataPipelineDTO.getName())).thenReturn(false);
 
             Mockito.when(endpointMetadataService.findAllByTypeAndCategoryAndIsMandatory(EndpointType.HTTP.name(),
-                    Category.SOURCE.name(), true)).thenReturn(getSourceMetadaForMandatoryFieldsHTTP());
+                    Category.SOURCE.name(), true)).thenReturn(getHttpSourceMetadaForMandatoryFields());
             DataPipelineValidator.validate(null, dataPipelineDTO, endpointMetadataService,dataPipelineRepository,discoveryClient,applicationProperties);
             fail("CustomParameterizedException not occured");
         } catch (CustomParameterizedException e) {
@@ -604,6 +686,89 @@ public class DataPipelineValidatorTest {
             @SuppressWarnings("unchecked")
             Map<String, String> param = (Map<String, String>) params.get(MessageConstants.PARAMS_KEY);
             assertThat(param.get(MessageConstants.MESSAGE_KEY)).isEqualTo(MessageConstants.ERR_MISSTING_REQUIRED_PROPERTY);
+        }
+    }
+    
+    @Test
+    public void validateHttpSecureFlag(){
+        try {
+            DataPipelineDTO dataPipelineDTO = createDataPipelineWithHttpEndpoint();
+
+            Set<EndpointConfigDTO> sourceConfigs = dataPipelineDTO.getSource().getConfigurations();
+            
+            EndpointConfigDTO sourceConfig = new EndpointConfigDTO();
+            sourceConfig.setKey("isSecure");
+            sourceConfig.setValue("false");
+            sourceConfigs.add(sourceConfig);
+            
+            dataPipelineDTO.getSource().setConfigurations(sourceConfigs);
+            
+            Mockito.when(dataPipelineRepository.existsByNameIgnoreCase(dataPipelineDTO.getName())).thenReturn(false);
+
+            Mockito.when(endpointMetadataService.findAllByTypeAndCategoryAndIsMandatory(EndpointType.HTTP.name(),
+                    Category.SOURCE.name(), true)).thenReturn(getHttpSourceMetadaForMandatoryFields());
+            
+            DataPipelineValidator.validate(null, dataPipelineDTO, endpointMetadataService,dataPipelineRepository,discoveryClient,applicationProperties);
+            fail("CustomParameterizedException not occured");
+        } catch (CustomParameterizedException e) {
+            Map<String, Object> params = e.getParameters();
+            assertThat(params.get(MessageConstants.MESSAGE_KEY)).isEqualTo(ErrorConstants.ERR_INVALID_SECURE_FLAG);
+            @SuppressWarnings("unchecked")
+            Map<String, String> param = (Map<String, String>) params.get(MessageConstants.PARAMS_KEY);
+            assertThat(param.get(MessageConstants.MESSAGE_KEY)).isEqualTo(MessageConstants.ERR_INVALID_SECURE_FLAG);
+        }
+    }
+    
+    @Test
+    public void validateMLLPSourceAndDestinationEndpoints(){
+        try{
+            Set<EndpointConfigDTO> configs = createMLLPConfig();
+            Set<FilterDTO> filters = new HashSet<>();
+            Set<TransformerDTO> transformers =new HashSet<>();
+            EndpointDTO sourceEndpoint = createMllpEndpoint(configs, filters, transformers);
+            Set<EndpointDTO> destinationEndpoints = new HashSet<>();
+
+            EndpointDTO destinationEndpoint = createMllpEndpoint(configs,filters ,transformers);
+            destinationEndpoints.add(destinationEndpoint);
+            DataPipelineDTO dataPipelineDTO = createDataPipeline(sourceEndpoint, destinationEndpoints);
+            
+            Mockito.when(dataPipelineRepository.existsByNameIgnoreCase(dataPipelineDTO.getName())).thenReturn(false);
+            Mockito.when(endpointMetadataService.findAllByTypeAndCategoryAndIsMandatory(EndpointType.MLLP.name(),
+                Category.SOURCE.name(), true)).thenReturn(getMllpSourceMetadaForMandatoryFields());
+
+            DataPipelineValidator.validate(null, dataPipelineDTO, endpointMetadataService,dataPipelineRepository,discoveryClient,applicationProperties);
+            fail("CustomParameterizedException not occured");
+        }catch (CustomParameterizedException e) {
+            Map<String, Object> params = e.getParameters();
+            assertThat(params.get(MessageConstants.MESSAGE_KEY)).isEqualTo(ErrorConstants.ERR_DUPLICATE_SOURCE_DESTINATION_ENDPOINT);
+            @SuppressWarnings("unchecked")
+            Map<String, String> param = (Map<String, String>) params.get(MessageConstants.PARAMS_KEY);
+            assertThat(param.get(MessageConstants.MESSAGE_KEY)).isEqualTo(MessageConstants.ERR_DUPLICATE_SOURCE_DESTINATION_ENDPOINT);
+        }
+    }
+    
+    @Test
+    public void validateHTTPSourceAndDestinationEndpoints(){
+        try{
+            EndpointDTO sourceEndpoint = createHttpSourceEndpoint();
+            Set<EndpointDTO> destinationEndpoints = new HashSet<>();
+            EndpointDTO destinationEndpoint = createHttpDestinationEndpoint();
+            destinationEndpoints.add(destinationEndpoint);
+            DataPipelineDTO dataPipelineDTO = createDataPipeline(sourceEndpoint, destinationEndpoints);
+            
+            Mockito.when(dataPipelineRepository.existsByNameIgnoreCase(dataPipelineDTO.getName())).thenReturn(false);
+
+            Mockito.when(endpointMetadataService.findAllByTypeAndCategoryAndIsMandatory(EndpointType.HTTP.name(),
+                    Category.SOURCE.name(), true)).thenReturn(getHttpSourceMetadaForMandatoryFields());
+
+            DataPipelineValidator.validate(null, dataPipelineDTO, endpointMetadataService,dataPipelineRepository,discoveryClient,applicationProperties);
+            fail("CustomParameterizedException not occured");
+        }catch (CustomParameterizedException e) {
+            Map<String, Object> params = e.getParameters();
+            assertThat(params.get(MessageConstants.MESSAGE_KEY)).isEqualTo(ErrorConstants.ERR_DUPLICATE_SOURCE_DESTINATION_ENDPOINT);
+            @SuppressWarnings("unchecked")
+            Map<String, String> param = (Map<String, String>) params.get(MessageConstants.PARAMS_KEY);
+            assertThat(param.get(MessageConstants.MESSAGE_KEY)).isEqualTo(MessageConstants.ERR_DUPLICATE_SOURCE_DESTINATION_ENDPOINT);
         }
     }
 }

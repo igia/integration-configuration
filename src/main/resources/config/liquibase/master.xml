@@ -20,48 +20,38 @@
 
     <include file="config/liquibase/changelog/00000000000000_initial_schema.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20181019121554_added_entity_DataPipeline.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20181019121555_added_entity_SourceEndpoint.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20181019121556_added_entity_DestinationEndpoint.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20181019121557_added_entity_SourceConfig.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20181019121558_added_entity_DestinationConfig.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20181019121559_added_entity_SourceFilter.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20181019121600_added_entity_DestinationFilter.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20181019121601_added_entity_SourceTransformer.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20181019121602_added_entity_DestinationTransformer.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20181019121603_added_entity_EndpointMetadata.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190117145508_added_entity_ResponseTransformer.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190304061832_added_entity_DataPipelineAuditMessageEventType.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190807132726_added_entity_Endpoint.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190807132727_added_entity_EnpointConfig.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190807132728_added_entity_Filter.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190807132729_added_entity_Transformer.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <include file="config/liquibase/changelog/20181019121554_added_entity_constraints_DataPipeline.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20181019121556_added_entity_constraints_DestinationEndpoint.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20181019121557_added_entity_constraints_SourceConfig.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20181019121558_added_entity_constraints_DestinationConfig.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20181019121559_added_entity_constraints_SourceFilter.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20181019121600_added_entity_constraints_DestinationFilter.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20181019121601_added_entity_constraints_SourceTransformer.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20181019121602_added_entity_constraints_DestinationTransformer.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20181102_added_column_entity_Datapipeline.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190117145508_added_entity_constraints_ResponseTransformer.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190807132726_added_entity_constraints_Endpoint.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190807132727_added_entity_constraints_EndpointConfig.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190807132728_added_entity_constraints_Filter.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190807132729_added_entity_constraints_Transformer.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     
     <!--  change logs for audit tables -->
     <include file="config/liquibase/changelog/201811211217_added_sequence_generator.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/201811210150_added_entity_audit_datapipeline.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/201811210150_added_entity_audit_destination_config.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/201811210150_added_entity_audit_source_config.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/201811210150_added_entity_audit_source_endpoint.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/201811210221_added_entity_audit_destination_filter.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/201811210221_added_entity_audit_destination_transformer.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/201811210221_added_entity_audit_source_filter.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/201811210221_added_entity_audit_source_transformer.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/201811210150_added_entity_audit_destination_endpoint.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/201811210800_added_entity_audit_endpoint_metadata.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190117145508_added_audit_entity_ResponseTransformer.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190304061832_audit_entity_DataPipelineAuditMessageEventType.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190807132726_added_entity_audit_Endpoint.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190807132727_added_entity_audit_EndpointConfig.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190807132728_added_entity_audit_Filter.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190807132729_added_entity_audit_Transformer.xml" relativeToChangelogFile="false"/>
+    
+    <!-- csv files   -->
     <include file="config/liquibase/changelog/201812110419_add_support_for_SFTP.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/201901090230_add_support_for_HTTP_HTTPS.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20190117145508_added_audit_entity_ResponseTransformer.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190128_add_support_for_additional_SFTP_FILE_properties.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190131_update_endpoint_metadata_table.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20190205_added_sequence_generator-for-response-transformer.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190128_add_support_for_additional_HTTP_MLLP_properties.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20190304061832_audit_entity_DataPipelineAuditMessageEventType.xml" relativeToChangelogFile="false"/>
+    
 </databaseChangeLog>

@@ -25,33 +25,31 @@ import javax.crypto.NoSuchPaddingException;
 import io.igia.integration.configuration.domain.enumeration.Category;
 import io.igia.integration.configuration.service.EndpointMetadataService;
 import io.igia.integration.configuration.service.dto.DataPipelineDTO;
-import io.igia.integration.configuration.service.dto.DestinationConfigDTO;
-import io.igia.integration.configuration.service.dto.DestinationEndpointDTO;
+import io.igia.integration.configuration.service.dto.EndpointDTO;
 import io.igia.integration.configuration.service.dto.EndpointMetadataDTO;
-import io.igia.integration.configuration.service.dto.SourceConfigDTO;
-import io.igia.integration.configuration.service.dto.SourceEndpointDTO;
+import io.igia.integration.configuration.service.dto.EndpointConfigDTO;
 
 public class DataEncrypt {
 
     private DataEncrypt() {
     }
 
-    public static SourceEndpointDTO encryptSourceConfiguration(SourceEndpointDTO sourceEndpointDTO,
+    public static EndpointDTO encryptSourceConfiguration(EndpointDTO endpointDTO,
             EndpointMetadataService endpointMetadataService, EncryptionUtility encryptionUtility)
             throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException,
             BadPaddingException {
 
         List<EndpointMetadataDTO> sourceEndpointMetadataDTOs = endpointMetadataService
-                .findAllByTypeAndCategoryAndIsEncrypted(sourceEndpointDTO.getType().name(), Category.SOURCE.name(),
+                .findAllByTypeAndCategoryAndIsEncrypted(endpointDTO.getType().name(), Category.SOURCE.name(),
                         true);
 
         if (!sourceEndpointMetadataDTOs.isEmpty()) {
-            Set<SourceConfigDTO> configs = sourceEndpointDTO.getConfigurations();
+            Set<EndpointConfigDTO> configs = endpointDTO.getConfigurations();
             HashSet<String> encryptedProperties = new HashSet<>();
             for (EndpointMetadataDTO endpointMetadataDTO : sourceEndpointMetadataDTOs) {
                 encryptedProperties.add(endpointMetadataDTO.getProperty());
             }
-            for (SourceConfigDTO sourceConfigDTO : configs) {
+            for (EndpointConfigDTO sourceConfigDTO : configs) {
                 if (encryptedProperties.contains(sourceConfigDTO.getKey())) {
                     String value = sourceConfigDTO.getValue();
                     String encyptedValue = encryptionUtility.encrypt(value);
@@ -59,24 +57,24 @@ public class DataEncrypt {
                 }
             }
         }
-        return sourceEndpointDTO;
+        return endpointDTO;
     }
 
-    public static SourceEndpointDTO decryptSourceConfiguration(SourceEndpointDTO sourceEndpointDTO,
+    public static EndpointDTO decryptSourceConfiguration(EndpointDTO endpointDTO,
             EndpointMetadataService endpointMetadataService, EncryptionUtility encryptionUtility)
             throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException,
             BadPaddingException {
         List<EndpointMetadataDTO> sourceEndpointMetadataDTOs = endpointMetadataService
-                .findAllByTypeAndCategoryAndIsEncrypted(sourceEndpointDTO.getType().name(), Category.SOURCE.name(),
+                .findAllByTypeAndCategoryAndIsEncrypted(endpointDTO.getType().name(), Category.SOURCE.name(),
                         true);
         if (!sourceEndpointMetadataDTOs.isEmpty()) {
-            Set<SourceConfigDTO> configs = sourceEndpointDTO.getConfigurations();
+            Set<EndpointConfigDTO> configs = endpointDTO.getConfigurations();
             HashSet<String> encryptedProperties = new HashSet<>();
             for (EndpointMetadataDTO endpointMetadataDTO : sourceEndpointMetadataDTOs) {
                 encryptedProperties.add(endpointMetadataDTO.getProperty());
             }
 
-            for (SourceConfigDTO sourceConfigDTO : configs) {
+            for (EndpointConfigDTO sourceConfigDTO : configs) {
                 if (encryptedProperties.contains(sourceConfigDTO.getKey())) {
                     String value = sourceConfigDTO.getValue();
                     String dcyptedValue = encryptionUtility.decrypt(value);
@@ -84,24 +82,24 @@ public class DataEncrypt {
                 }
             }
         }
-        return sourceEndpointDTO;
+        return endpointDTO;
     }
 
-    public static DestinationEndpointDTO encryptDestinationConfiguration(DestinationEndpointDTO destinationEndpointDTO,
+    public static EndpointDTO encryptDestinationConfiguration(EndpointDTO endpointDTO,
             EndpointMetadataService endpointMetadataService, EncryptionUtility encryptionUtility)
             throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException,
             BadPaddingException {
 
         List<EndpointMetadataDTO> destinationEndpointMetadataDTOs = endpointMetadataService
-                .findAllByTypeAndCategoryAndIsEncrypted(destinationEndpointDTO.getType().name(),
+                .findAllByTypeAndCategoryAndIsEncrypted(endpointDTO.getType().name(),
                         Category.DESTINATION.name(), true);
         if (!destinationEndpointMetadataDTOs.isEmpty()) {
-            Set<DestinationConfigDTO> configs = destinationEndpointDTO.getConfigurations();
+            Set<EndpointConfigDTO> configs = endpointDTO.getConfigurations();
             HashSet<String> encryptedProperties = new HashSet<>();
             for (EndpointMetadataDTO endpointMetadataDTO : destinationEndpointMetadataDTOs) {
                 encryptedProperties.add(endpointMetadataDTO.getProperty());
             }
-            for (DestinationConfigDTO destinationConfigDTO : configs) {
+            for (EndpointConfigDTO destinationConfigDTO : configs) {
                 if (encryptedProperties.contains(destinationConfigDTO.getKey())) {
                     String value = destinationConfigDTO.getValue();
                     String encyptedValue = encryptionUtility.encrypt(value);
@@ -109,24 +107,24 @@ public class DataEncrypt {
                 }
             }
         }
-        return destinationEndpointDTO;
+        return endpointDTO;
     }
 
-    public static DestinationEndpointDTO decryptDestinationConfiguration(DestinationEndpointDTO destinationEndpointDTO,
+    public static EndpointDTO decryptDestinationConfiguration(EndpointDTO endpointDTO,
             EndpointMetadataService endpointMetadataService, EncryptionUtility encryptionUtility)
             throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException,
             BadPaddingException {
 
         List<EndpointMetadataDTO> destinationEndpointMetadataDTOs = endpointMetadataService
-                .findAllByTypeAndCategoryAndIsEncrypted(destinationEndpointDTO.getType().name(),
+                .findAllByTypeAndCategoryAndIsEncrypted(endpointDTO.getType().name(),
                         Category.DESTINATION.name(), true);
         if (!destinationEndpointMetadataDTOs.isEmpty()) {
-            Set<DestinationConfigDTO> configs = destinationEndpointDTO.getConfigurations();
+            Set<EndpointConfigDTO> configs = endpointDTO.getConfigurations();
             HashSet<String> encryptedProperties = new HashSet<>();
             for (EndpointMetadataDTO endpointMetadataDTO : destinationEndpointMetadataDTOs) {
                 encryptedProperties.add(endpointMetadataDTO.getProperty());
             }
-            for (DestinationConfigDTO destinationConfigDTO : configs) {
+            for (EndpointConfigDTO destinationConfigDTO : configs) {
                 if (encryptedProperties.contains(destinationConfigDTO.getKey())) {
                     String value = destinationConfigDTO.getValue();
                     String decyptedValue = encryptionUtility.decrypt(value);
@@ -134,7 +132,7 @@ public class DataEncrypt {
                 }
             }
         }
-        return destinationEndpointDTO;
+        return endpointDTO;
     }
 
     public static DataPipelineDTO encrypt(DataPipelineDTO dataPipelineDTO,
@@ -142,12 +140,12 @@ public class DataEncrypt {
             throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException,
             BadPaddingException {
 
-        SourceEndpointDTO sourceEndpointDTO = encryptSourceConfiguration(dataPipelineDTO.getSource(),
+        EndpointDTO endpointDTO = encryptSourceConfiguration(dataPipelineDTO.getSource(),
                 endpointMetadataService, encryptionUtility);
-        dataPipelineDTO.setSource(sourceEndpointDTO);
-        Set<DestinationEndpointDTO> endpointDTOs = new HashSet<>();
-        for (DestinationEndpointDTO destinationEndpointDTO : dataPipelineDTO.getDestinations()) {
-            DestinationEndpointDTO encDestinationEndpointDTO = encryptDestinationConfiguration(destinationEndpointDTO,
+        dataPipelineDTO.setSource(endpointDTO);
+        Set<EndpointDTO> endpointDTOs = new HashSet<>();
+        for (EndpointDTO destinationEndpointDTO : dataPipelineDTO.getDestinations()) {
+            EndpointDTO encDestinationEndpointDTO = encryptDestinationConfiguration(destinationEndpointDTO,
                     endpointMetadataService, encryptionUtility);
             endpointDTOs.add(encDestinationEndpointDTO);
         }
@@ -160,12 +158,12 @@ public class DataEncrypt {
             throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException,
             BadPaddingException {
 
-        SourceEndpointDTO sourceEndpointDTO = decryptSourceConfiguration(dataPipelineDTO.getSource(),
+        EndpointDTO sourceEndpointDTO = decryptSourceConfiguration(dataPipelineDTO.getSource(),
                 endpointMetadataService, encryptionUtility);
         dataPipelineDTO.setSource(sourceEndpointDTO);
-        Set<DestinationEndpointDTO> endpointDTOs = new HashSet<>();
-        for (DestinationEndpointDTO destinationEndpointDTO : dataPipelineDTO.getDestinations()) {
-            DestinationEndpointDTO encDestinationEndpointDTO = decryptDestinationConfiguration(destinationEndpointDTO,
+        Set<EndpointDTO> endpointDTOs = new HashSet<>();
+        for (EndpointDTO destinationEndpointDTO : dataPipelineDTO.getDestinations()) {
+            EndpointDTO encDestinationEndpointDTO = decryptDestinationConfiguration(destinationEndpointDTO,
                     endpointMetadataService, encryptionUtility);
             endpointDTOs.add(encDestinationEndpointDTO);
         }

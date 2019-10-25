@@ -16,5 +16,5 @@ package io.igia.integration.configuration.domain.enumeration;
  * The OutDataType enumeration.
  */
 public enum OutDataType {
-    HL7_V2, CSV, JSON, RAW
+	HL7_V2, CSV, JSON, RAW
 }

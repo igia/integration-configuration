@@ -1,0 +1,11 @@
+{
+  "type": "https://www.jhipster.tech/problem/parameterized",
+  "title": "Parameterized Exception",
+  "status": 400,
+  "message": "error.invalid.secure.flag",
+  "params": {
+    "field": "source.configurations.isSecure",
+    "message": "Secure field should be true",
+    "value": "false"
+  }
+}

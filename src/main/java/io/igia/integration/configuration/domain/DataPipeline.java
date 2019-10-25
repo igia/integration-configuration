@@ -11,7 +11,6 @@
  * Copyright (C) 2018-2019 Persistent Systems, Inc.
  */
 package io.igia.integration.configuration.domain;
-
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
@@ -57,28 +56,33 @@ public class DataPipeline implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "dataPipeline")
     private Long id;
 
+    @Column(name = "name")
     private String name;
 
+    @Column(name = "description")
     private String description;
 
+    @Column(name = "deploy")
     private Boolean deploy;
 
+    @Column(name = "version")
     @Version
     private Long version;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "state")
     private State state;
 
     @Column(name = "worker_service")
     private String workerService;
 
-    @Column(name = "created_date")
+    @Column(name = "created_on")
     private Instant createdOn;
 
     @Column(name = "created_by")
     private String createdBy;
 
-    @Column(name = "modified_date")
+    @Column(name = "modified_on")
     private Instant modifiedOn;
 
     @Column(name = "modified_by")
@@ -87,17 +91,32 @@ public class DataPipeline implements Serializable {
     @OneToOne(cascade = CascadeType.ALL,orphanRemoval= true,optional = false)
     @JoinColumn(unique = true)
     private SourceEndpoint source;
-    
-    @OneToMany(mappedBy = "dataPipeline", cascade = CascadeType.ALL, orphanRemoval= true, fetch = FetchType.EAGER)
+
+    @OneToMany(mappedBy = "dataPipeline", cascade =  CascadeType.ALL , fetch = FetchType.EAGER , orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<DestinationEndpoint> destinations = new HashSet<>();
-
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not
-    // remove
+    
     @Column(name = "reason")
     @Lob
     private String reason;
-    
+
+    public Instant getModifiedOn() {
+		return modifiedOn;
+	}
+
+	public void setModifiedOn(Instant modifiedOn) {
+		this.modifiedOn = modifiedOn;
+	}
+
+	public String getReason() {
+		return reason;
+	}
+
+	public void setReason(String reason) {
+		this.reason = reason;
+	}
+
+	// jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
     }
@@ -184,9 +203,17 @@ public class DataPipeline implements Serializable {
         this.workerService = workerService;
     }
 
+    public Instant getCreatedOn() {
+        return createdOn;
+    }
+
     public DataPipeline createdOn(Instant createdOn) {
         this.createdOn = createdOn;
         return this;
+    }
+
+    public void setCreatedOn(Instant createdOn) {
+        this.createdOn = createdOn;
     }
 
     public String getCreatedBy() {
@@ -202,8 +229,8 @@ public class DataPipeline implements Serializable {
         this.createdBy = createdBy;
     }
 
-    public DataPipeline modifiedOn(Instant modifiedOn) {
-        this.modifiedOn = modifiedOn;
+    public DataPipeline modifiedOn(Instant modifiedDate) {
+        this.modifiedOn = modifiedDate;
         return this;
     }
 
@@ -224,63 +251,50 @@ public class DataPipeline implements Serializable {
         return source;
     }
 
-    public DataPipeline source(SourceEndpoint sourceEndpoint) {
-        this.source = sourceEndpoint;
+    public DataPipeline source(SourceEndpoint endpoint) {
+        this.source = endpoint;
         return this;
     }
 
-    public void setSource(SourceEndpoint sourceEndpoint) {
-        this.source = sourceEndpoint;
+    public void setSource(SourceEndpoint endpoint) {
+        this.source = endpoint;
     }
 
     public Set<DestinationEndpoint> getDestinations() {
         return destinations;
     }
 
-    public DataPipeline destinations(Set<DestinationEndpoint> destinationEndpoints) {
-        this.destinations = destinationEndpoints;
+    public DataPipeline destinations(Set<DestinationEndpoint> endpoints) {
+        this.destinations = endpoints;
         return this;
     }
 
-    public DataPipeline addDestination(DestinationEndpoint destinationEndpoint) {
-        this.destinations.add(destinationEndpoint);
-        destinationEndpoint.setDataPipeline(this);
+    public DataPipeline addDestination(DestinationEndpoint endpoint) {
+        this.destinations.add(endpoint);
+        endpoint.setDataPipeline(this);
         return this;
     }
 
-    public DataPipeline removeDestination(DestinationEndpoint destinationEndpoint) {
-        this.destinations.remove(destinationEndpoint);
-        destinationEndpoint.setDataPipeline(null);
+    public DataPipeline removeDestination(DestinationEndpoint endpoint) {
+        this.destinations.remove(endpoint);
+        endpoint.setDataPipeline(null);
         return this;
     }
 
-    public void setDestinations(Set<DestinationEndpoint> destinationEndpoints) {
-        this.destinations = destinationEndpoints;
+    public void setDestinations(Set<DestinationEndpoint> endpoints) {
+        this.destinations = endpoints;
     }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters
-    // and setters here, do not remove
-
-    public String getReason() {
-        return reason;
-    }
-
-    public void setReason(String reason) {
-        this.reason = reason;
-    }
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof DataPipeline)) {
             return false;
         }
-        DataPipeline dataPipeline = (DataPipeline) o;
-        if (dataPipeline.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), dataPipeline.getId());
+        return id != null && id.equals(((DataPipeline) o).id);
     }
 
     @Override
@@ -288,29 +302,13 @@ public class DataPipeline implements Serializable {
         return Objects.hashCode(getId());
     }
 
-    public Instant getCreatedOn() {
-        return createdOn;
-    }
+	@Override
+	public String toString() {
+		return "DataPipeline [id=" + id + ", name=" + name + ", description=" + description + ", deploy=" + deploy
+				+ ", version=" + version + ", state=" + state + ", workerService=" + workerService + ", createdOn="
+				+ createdOn + ", createdBy=" + createdBy + ", modifiedOn=" + modifiedOn + ", modifiedBy=" + modifiedBy
+				+ ", source=" + source + ", destinations=" + destinations + ", reason=" + reason + "]";
+	}
 
-    public void setCreatedOn(Instant createdOn) {
-        this.createdOn = createdOn;
-    }
-
-    public Instant getModifiedOn() {
-        return modifiedOn;
-    }
-
-    public void setModifiedOn(Instant modifiedOn) {
-        this.modifiedOn = modifiedOn;
-    }
-
-    @Override
-    public String toString() {
-        return "DataPipeline [id=" + id + ", name=" + name + ", description=" + description + ", deploy=" + deploy
-                + ", version=" + version + ", state=" + state + ", workerService=" + workerService + ", createdOn="
-                + createdOn + ", createdBy=" + createdBy + ", modifiedOn=" + modifiedOn + ", modifiedBy=" + modifiedBy
-                + ", source=" + source + ", destinations=" + destinations + ", reason=" + reason + "]";
-    }
-    
-    
+   
 }

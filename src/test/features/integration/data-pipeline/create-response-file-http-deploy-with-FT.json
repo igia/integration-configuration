@@ -71,6 +71,10 @@
             "id" : "#number",
             "key": "resourceUri",
             "value": "/medical-records"
+        }, {
+            "id" : "#number",
+            "key": "isSecure",
+            "value": "false"
         } ],
         "filters" : [ {
             "id" : "#number",

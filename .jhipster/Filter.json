@@ -1,0 +1,41 @@
+{
+    "name": "Filter",
+    "fields": [
+        {
+            "fieldName": "filterOrder",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "filterType",
+            "fieldType": "FilterType",
+            "fieldValues": "JAVASCRIPT"
+        },
+        {
+            "fieldName": "data",
+            "fieldType": "byte[]",
+            "fieldTypeBlobContent": "text"
+        },
+        {
+            "fieldName": "description",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipName": "endpoint",
+            "otherEntityName": "endpoint",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20190807132728",
+    "entityTableName": "filter",
+    "dto": "mapstruct",
+    "pagination": "no",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "integrationconfiguration",
+    "applications": "*",
+    "microserviceName": "integrationconfiguration"
+}

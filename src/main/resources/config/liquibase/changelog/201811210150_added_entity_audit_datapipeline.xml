@@ -35,9 +35,9 @@
             <column name="version" type="bigint"/>
             <column name="state" type="varchar(255)"/>
             <column name="worker_service" type="varchar(255)"/>
-            <column name="created_date" type="datetime"/>
+            <column name="created_on" type="datetime"/>
             <column name="created_by" type="varchar(255)"/>
-            <column name="modified_date" type="datetime"/>
+            <column name="modified_on" type="datetime"/>
             <column name="modified_by" type="varchar(255)"/>
             <column name="source_id" type="bigint"/>
             <column name="reason" type="clob" />

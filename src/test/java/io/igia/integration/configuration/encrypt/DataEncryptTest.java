@@ -41,15 +41,11 @@ import io.igia.integration.configuration.domain.enumeration.Category;
 import io.igia.integration.configuration.domain.enumeration.EndpointType;
 import io.igia.integration.configuration.domain.enumeration.InDataType;
 import io.igia.integration.configuration.domain.enumeration.OutDataType;
-import io.igia.integration.configuration.encrypt.DataEncrypt;
-import io.igia.integration.configuration.encrypt.EncryptionUtility;
 import io.igia.integration.configuration.service.EndpointMetadataService;
 import io.igia.integration.configuration.service.dto.DataPipelineDTO;
-import io.igia.integration.configuration.service.dto.DestinationConfigDTO;
-import io.igia.integration.configuration.service.dto.DestinationEndpointDTO;
+import io.igia.integration.configuration.service.dto.EndpointConfigDTO;
+import io.igia.integration.configuration.service.dto.EndpointDTO;
 import io.igia.integration.configuration.service.dto.EndpointMetadataDTO;
-import io.igia.integration.configuration.service.dto.SourceConfigDTO;
-import io.igia.integration.configuration.service.dto.SourceEndpointDTO;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DataEncryptTest {
@@ -70,45 +66,45 @@ public class DataEncryptTest {
 
     private DataPipelineDTO createEntity() {
 
-        SourceConfigDTO sourceConfig = new SourceConfigDTO();
+        EndpointConfigDTO sourceConfig = new EndpointConfigDTO();
         sourceConfig.setKey("hostname");
         sourceConfig.setValue("hostname");
 
-        Set<SourceConfigDTO> sourceConfigs = new HashSet<>();
+        Set<EndpointConfigDTO> sourceConfigs = new HashSet<>();
         sourceConfigs.add(sourceConfig);
 
-        sourceConfig = new SourceConfigDTO();
+        sourceConfig = new EndpointConfigDTO();
         sourceConfig.setKey("port");
         sourceConfig.setValue("9080");
         sourceConfigs.add(sourceConfig);
 
-        SourceEndpointDTO sourceEndpoint = new SourceEndpointDTO();
+        EndpointDTO sourceEndpoint = new EndpointDTO();
         sourceEndpoint.setInDataType(InDataType.HL7_V2);
         sourceEndpoint.setOutDataType(OutDataType.HL7_V2);
         sourceEndpoint.setName("MLLP Source");
         sourceEndpoint.setConfigurations(sourceConfigs);
         sourceEndpoint.setType(EndpointType.MLLP);
 
-        DestinationConfigDTO destinationConfig = new DestinationConfigDTO();
+        EndpointConfigDTO destinationConfig = new EndpointConfigDTO();
         destinationConfig.setKey("directoryName");
         destinationConfig.setValue("directoryName");
 
-        Set<DestinationConfigDTO> destinationConfigs = new HashSet<>();
+        Set<EndpointConfigDTO> destinationConfigs = new HashSet<>();
         destinationConfigs.add(destinationConfig);
 
-        destinationConfig = new DestinationConfigDTO();
+        destinationConfig = new EndpointConfigDTO();
         destinationConfig.setKey("fileName");
         destinationConfig.setValue("fileName");
         destinationConfigs.add(destinationConfig);
 
-        DestinationEndpointDTO destinationEndpoint = new DestinationEndpointDTO();
+        EndpointDTO destinationEndpoint = new EndpointDTO();
         destinationEndpoint.setInDataType(InDataType.HL7_V2);
         destinationEndpoint.setOutDataType(OutDataType.HL7_V2);
         destinationEndpoint.setName("FILE Destiantion");
         destinationEndpoint.setConfigurations(destinationConfigs);
         destinationEndpoint.setType(EndpointType.FILE);
 
-        Set<DestinationEndpointDTO> destinationEndpoints = new HashSet<>();
+        Set<EndpointDTO> destinationEndpoints = new HashSet<>();
         destinationEndpoints.add(destinationEndpoint);
 
         DataPipelineDTO dataPipeline = new DataPipelineDTO();
@@ -185,18 +181,18 @@ public class DataEncryptTest {
 
         try {
 
-            SourceEndpointDTO sourceEndpointDTO = dataPipelineDTO.getSource();
-            Set<SourceConfigDTO> sourceConfigs = sourceEndpointDTO.getConfigurations();
+            EndpointDTO sourceEndpointDTO = dataPipelineDTO.getSource();
+            Set<EndpointConfigDTO> sourceConfigs = sourceEndpointDTO.getConfigurations();
             Map<String, String> map = new HashMap<>();
 
-            for (SourceConfigDTO config : sourceConfigs) {
+            for (EndpointConfigDTO config : sourceConfigs) {
                 map.put(config.getKey(), config.getValue());
             }
 
-            Set<DestinationEndpointDTO> destinationConfigs = dataPipelineDTO.getDestinations();
-            for (DestinationEndpointDTO destinationEndpointDTO : destinationConfigs) {
-                Set<DestinationConfigDTO> destinationConfigDTOs = destinationEndpointDTO.getConfigurations();
-                for (DestinationConfigDTO destinationConfigDTO : destinationConfigDTOs) {
+            Set<EndpointDTO> destinationConfigs = dataPipelineDTO.getDestinations();
+            for (EndpointDTO destinationEndpointDTO : destinationConfigs) {
+                Set<EndpointConfigDTO> destinationConfigDTOs = destinationEndpointDTO.getConfigurations();
+                for (EndpointConfigDTO destinationConfigDTO : destinationConfigDTOs) {
                     map.put(destinationConfigDTO.getKey(), destinationConfigDTO.getValue());
                 }
             }
@@ -211,14 +207,14 @@ public class DataEncryptTest {
             sourceConfigs = sourceEndpointDTO.getConfigurations();
 
             Map<String, String> decryptedMap = new HashMap<>();
-            for (SourceConfigDTO config : sourceConfigs) {
+            for (EndpointConfigDTO config : sourceConfigs) {
                 decryptedMap.put(config.getKey(), config.getValue());
             }
 
             destinationConfigs = decryptedDataPipelineDTO.getDestinations();
-            for (DestinationEndpointDTO destinationEndpointDTO : destinationConfigs) {
-                Set<DestinationConfigDTO> destinationConfigDTOs = destinationEndpointDTO.getConfigurations();
-                for (DestinationConfigDTO destinationConfigDTO : destinationConfigDTOs) {
+            for (EndpointDTO destinationEndpointDTO : destinationConfigs) {
+                Set<EndpointConfigDTO> destinationConfigDTOs = destinationEndpointDTO.getConfigurations();
+                for (EndpointConfigDTO destinationConfigDTO : destinationConfigDTOs) {
                     decryptedMap.put(destinationConfigDTO.getKey(), destinationConfigDTO.getValue());
                 }
             }

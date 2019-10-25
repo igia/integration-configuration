@@ -3,8 +3,8 @@
     "clientRootFolder": "integrationconfiguration",
     "relationships": [
         {
-            "relationshipName": "destinationEndpoint",
-            "otherEntityName": "destinationEndpoint",
+            "relationshipName": "endpoint",
+            "otherEntityName": "endpoint",
             "relationshipType": "many-to-one",
             "otherEntityField": "id"
         }
@@ -46,6 +46,7 @@
                 "required"
             ]
         }
+
     ],
     "changelogDate": "20190117145508",
     "dto": "mapstruct",
@@ -54,5 +55,7 @@
     "entityTableName": "response_transformer",
     "jpaMetamodelFiltering": false,
     "pagination": "no",
-    "microserviceName": "integrationconfiguration"
+    "microserviceName": "integrationconfiguration",
+    "name": "ResponseTransformer",
+    "applications": "*"
 }

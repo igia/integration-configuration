@@ -724,9 +724,183 @@ Scenario: Create MLLP to FILE data pipeline that is deployed and it has 2 filter
         Then status 400
         Then match response == resExport
 
+@TestFILE
+ Scenario: Create FILE to HTTPS data pipeline that is deployed and it has 2 filters and 2 transformers and get data pipeline resources and delete the pipeline and get that pipeline again.
+         * def reqCreate =  read('classpath:integration/data-pipeline/create-request-file-https-deploy-with-FT.json')
+        * set reqCreate.name = "Test-" + now()
+        * set reqCreate.source.name = "Source-" + now()
+        * set reqCreate.destinations[0].name = "Destination-" + now()
+        
+        * set reqCreate.source.configurations[0].value = fileConfigs.inputFileName
+        * set reqCreate.source.configurations[1].value = fileConfigs.inputDirectoryPath
+        * set reqCreate.destinations[0].configurations[0].value = httpConfigs.outputHostname
+        * set reqCreate.destinations[0].configurations[1].value = httpConfigs.outputPort
+        * set reqCreate.destinations[0].configurations[2].value = httpConfigs.outputUri
+ 
+        * def tempJSON = read('classpath:integration/data-pipeline/create-response-file-https-deploy-with-FT.json')
+        * def resCreate = read('classpath:integration/data-pipeline/create-response-file-https-deploy-with-FT.json')
+        * def resDeleteNotFound = read('classpath:integration/data-pipeline/delete-response-not-found.json')
+        * def resGetByIdNotFound = read('classpath:integration/data-pipeline/get-response-not-found.json')
+        
+        * set tempJSON.source.configurations[0].value = reqCreate.source.configurations[0].value
+        * set tempJSON.source.configurations[1].value = reqCreate.source.configurations[1].value
+        * set tempJSON.destinations[0].configurations[0].value = reqCreate.destinations[0].configurations[0].value
+        * set tempJSON.destinations[0].configurations[1].value = reqCreate.destinations[0].configurations[1].value
+        * set tempJSON.destinations[0].configurations[2].value = reqCreate.destinations[0].configurations[2].value
+
+        * set resCreate.source.configurations = '#(^^tempJSON.source.configurations)'
+        * set resCreate.source.filters = '#(^^tempJSON.source.filters)'
+        * set resCreate.source.transformers = '#(^^tempJSON.source.transformers)'
+        * set resCreate.destinations[0].configurations = '#(^^tempJSON.destinations[0].configurations)'
+        * set resCreate.destinations[0].filters = '#(^^tempJSON.destinations[0].filters)'
+        * set resCreate.destinations[0].transformers = '#(^^tempJSON.destinations[0].transformers)'
+        * set resCreate.destinations[0].responseTransformers = '#(^^tempJSON.destinations[0].responseTransformers)'
+        * set resCreate.auditMessages = '#(^^tempJSON.auditMessages)'
+ 
+        * set resCreate.name = reqCreate.name
+        * set resCreate.source.name = reqCreate.source.name
+        * set resCreate.destinations[0].name = reqCreate.destinations[0].name
+ 
+
+    Given path '/data-pipelines'
+        And header Authorization = 'Bearer ' + accessToken
+        And request reqCreate
+        When method post
+        Then status 201
+        Then match response == resCreate
+    
+        * def pipelineId = response.id
+        * call sleep 30
+        * set resCreate.state = "STARTED"
+
+    Given path '/data-pipelines/' + pipelineId
+        And header Authorization = 'Bearer ' + accessToken
+        When method get
+        Then status 200
+        Then match response == resCreate
+
+    Given path '/interfaces/' + pipelineId + '/export'
+        And header Authorization = 'Bearer ' + accessToken
+        When method get
+        Then status 200
+        Then match response[0] == resCreate
+
+        * def reqUpdateWithNoFT = response[0]
+        * set reqUpdateWithNoFT.source.filters = []
+        * set reqUpdateWithNoFT.source.transformers = []
+        * set reqUpdateWithNoFT.deploy = false
+        * set reqUpdateWithNoFT.state = "STOPPING"
+        * set resCreate.source.filters = []
+        * set resCreate.source.transformers = []
+        * set resCreate.deploy = false
+        * set resCreate.state = "STOPPING"
+
+   Given path '/data-pipelines/'
+        And header Authorization = 'Bearer ' + accessToken
+        And request reqUpdateWithNoFT
+        When method put
+        Then status 200
+        Then match response == resCreate 
+ 
+        * call sleep 30
+        * set resCreate.deploy = false
+        * set resCreate.state = "STOPPED"
+
+   Given path '/data-pipelines/' + pipelineId
+        And header Authorization = 'Bearer ' + accessToken
+        When method get
+        Then status 200
+        Then match response == resCreate
+
+        * def reqUpdateOtherDetails = response
+        * set reqUpdateOtherDetails.name = "Updated_Name-" + now()
+        * set reqUpdateOtherDetails.description = "Updated_Description" + now()
+        * set resCreate.name = reqUpdateOtherDetails.name
+        * set resCreate.description = reqUpdateOtherDetails.description
+
+   Given path '/data-pipelines/'
+        And header Authorization = 'Bearer ' + accessToken
+        And request reqUpdateOtherDetails
+        When method put
+        Then status 200
+        Then match response == resCreate 
+ 
+        * call sleep 30
+
+   Given path '/data-pipelines/' + pipelineId
+        And header Authorization = 'Bearer ' + accessToken
+        When method get
+        Then status 200
+        Then match response == resCreate
+
+        * def reqUpdateSource = response
+        * set reqUpdateSource.source.name = "Updated Source Name"+now()
+        * set reqUpdateSource.source.inDataType = "CSV";
+        * set reqUpdateSource.source.outDataType = "CSV";
+        * set resCreate.source.name = reqUpdateSource.source.name
+        * set resCreate.source.inDataType = reqUpdateSource.source.inDataType;
+        * set resCreate.source.outDataType = reqUpdateSource.source.outDataType;
+
+   Given path '/data-pipelines/'
+        And header Authorization = 'Bearer ' + accessToken
+        And request reqUpdateSource
+        When method put
+        Then status 200
+        Then match response == resCreate 
+ 
+        * call sleep 30
+
+   Given path '/data-pipelines/' + pipelineId
+        And header Authorization = 'Bearer ' + accessToken
+        When method get
+        Then status 200
+        Then match response == resCreate
+
+  * def reqUpdateDestinations = response
+        * set reqUpdateDestinations.destinations[0].name = "Updated Destination Name"+now()
+        * set reqUpdateDestinations.destinations[0].inDataType = "CSV";
+        * set reqUpdateDestinations.destinations[0].outDataType = "CSV";
+        * set resCreate.destinations[0].name = reqUpdateDestinations.destinations[0].name
+        * set resCreate.destinations[0].inDataType = reqUpdateDestinations.destinations[0].inDataType;
+        * set resCreate.destinations[0].outDataType = reqUpdateDestinations.destinations[0].outDataType;
+
+   Given path '/data-pipelines/'
+        And header Authorization = 'Bearer ' + accessToken
+        And request reqUpdateDestinations
+        When method put
+        Then status 200
+        Then match response == resCreate 
+ 
+        * call sleep 30
+
+   Given path '/data-pipelines/' + pipelineId
+        And header Authorization = 'Bearer ' + accessToken
+        When method get
+        Then status 200
+        Then match response == resCreate
+      
+    Given path '/data-pipelines/' + pipelineId
+        And header Authorization = 'Bearer ' + accessToken
+        When method delete
+        Then status 200
+
+    Given path '/data-pipelines/' + pipelineId
+        And header Authorization = 'Bearer ' + accessToken
+        When method get
+        Then status 400
+        Then match response == resGetByIdNotFound
+
+    * def resExport = read('classpath:integration/data-pipeline/export-response-not-found.json')
+    Given path '/interfaces/' + pipelineId + '/export'
+        And header Authorization = 'Bearer ' + accessToken
+        When method get
+        Then status 400
+        Then match response == resExport
+
+
 @TestHTTP
- Scenario: Create HTTP to FILE data pipeline that is deployed and it has 2 filters and 2 transformers and get data pipeline resources and delete the pipeline and get that pipeline again.
-        * def reqCreate =  read('classpath:integration/data-pipeline/create-request-http-file-deploy-with-FT.json')
+ Scenario: Create HTTPS to FILE data pipeline that is deployed and it has 2 filters and 2 transformers and get data pipeline resources and delete the pipeline and get that pipeline again.
+        * def reqCreate =  read('classpath:integration/data-pipeline/create-request-https-file-deploy-with-FT.json')
         * set reqCreate.name = "Test-" + now()
         * set reqCreate.source.name = "Source-" + now()
         * set reqCreate.destinations[0].name = "Destination-" + now()
@@ -737,8 +911,8 @@ Scenario: Create MLLP to FILE data pipeline that is deployed and it has 2 filter
         * set reqCreate.destinations[0].configurations[0].value = fileConfigs.outputFileName
         * set reqCreate.destinations[0].configurations[1].value = fileConfigs.outputDirectoryPath
  
-        * def tempJSON = read('classpath:integration/data-pipeline/create-response-http-file-deploy-with-FT.json')
-        * def resCreate = read('classpath:integration/data-pipeline/create-response-http-file-deploy-with-FT.json')
+        * def tempJSON = read('classpath:integration/data-pipeline/create-response-https-file-deploy-with-FT.json')
+        * def resCreate = read('classpath:integration/data-pipeline/create-response-https-file-deploy-with-FT.json')
         * def resDeleteNotFound = read('classpath:integration/data-pipeline/delete-response-not-found.json')
         * def resGetByIdNotFound = read('classpath:integration/data-pipeline/get-response-not-found.json')
         
@@ -885,9 +1059,9 @@ Scenario: Create MLLP to FILE data pipeline that is deployed and it has 2 filter
         Then match response == resGetByIdNotFound
         
 @TestHTTP
- Scenario: Create HTTP to HTTP data pipeline that is deployed and it has 2 filters and 2 transformers and get data pipeline resources and delete the pipeline and get that pipeline again.
+ Scenario: Create HTTPS to HTTP data pipeline that is deployed and it has 2 filters and 2 transformers and get data pipeline resources and delete the pipeline and get that pipeline again.
 
- * def reqCreate =  read('classpath:integration/data-pipeline/create-request-http-http-deploy-with-FT.json')
+        * def reqCreate =  read('classpath:integration/data-pipeline/create-request-https-http-deploy-with-FT.json')
         * set reqCreate.name = "Test-" + now()
         * set reqCreate.source.name = "Source-" + now()
         * set reqCreate.destinations[0].name = "Destination-" + now()
@@ -899,8 +1073,8 @@ Scenario: Create MLLP to FILE data pipeline that is deployed and it has 2 filter
         * set reqCreate.destinations[0].configurations[1].value = httpConfigs.outputPort
         * set reqCreate.destinations[0].configurations[2].value = httpConfigs.outputUri
         
-        * def tempJSON = read('classpath:integration/data-pipeline/create-response-http-http-deploy-with-FT.json')
-        * def resCreate = read('classpath:integration/data-pipeline/create-response-http-http-deploy-with-FT.json')
+        * def tempJSON = read('classpath:integration/data-pipeline/create-response-https-http-deploy-with-FT.json')
+        * def resCreate = read('classpath:integration/data-pipeline/create-response-https-http-deploy-with-FT.json')
         * def resDeleteNotFound = read('classpath:integration/data-pipeline/delete-response-not-found.json')
         * def resGetByIdNotFound = read('classpath:integration/data-pipeline/get-response-not-found.json')
         
@@ -1047,10 +1221,221 @@ Scenario: Create MLLP to FILE data pipeline that is deployed and it has 2 filter
         Then status 400
         Then match response == resGetByIdNotFound
 
-@TestHTTP
- Scenario: Create HTTP to SFTP data pipeline that is deployed and it has 2 filters and 2 transformers and get data pipeline resources and delete the pipeline and get that pipeline again.
 
-        * def reqCreate =  read('classpath:integration/data-pipeline/create-request-http-sftp-deploy-with-FT.json')
+@TestHTTP
+ Scenario: Create HTTPS to HTTP data pipeline fails that has isSecure property missing
+
+        * def reqCreate =  read('classpath:integration/data-pipeline/create-request-https-http-deploy-with-missing-property.json')
+        * set reqCreate.name = "Test-" + now()
+        * set reqCreate.source.name = "Source-" + now()
+        * set reqCreate.destinations[0].name = "Destination-" + now()
+        
+        * set reqCreate.source.configurations[0].value = httpConfigs.inputHostname
+        * set reqCreate.source.configurations[1].value = httpConfigs.inputPort
+        * set reqCreate.source.configurations[2].value = httpConfigs.inputUri
+        * set reqCreate.destinations[0].configurations[0].value = httpConfigs.outputHostname
+        * set reqCreate.destinations[0].configurations[1].value = httpConfigs.outputPort
+        * set reqCreate.destinations[0].configurations[2].value = httpConfigs.outputUri
+        * def resCreate =  read('classpath:integration/data-pipeline/missing-property.json')
+
+        Given path '/data-pipelines'
+        And header Authorization = 'Bearer ' + accessToken
+        And request reqCreate
+        When method post
+        Then status 400
+        Then match response == resCreate
+
+@TestHTTP
+ Scenario: Create HTTPS to HTTP data pipeline fails that has isSecure property invalid in the source configuration
+
+        * def reqCreate =  read('classpath:integration/data-pipeline/create-request-https-http-deploy-with-isSecure-false.json')
+        * set reqCreate.name = "Test-" + now()
+        * set reqCreate.source.name = "Source-" + now()
+        * set reqCreate.destinations[0].name = "Destination-" + now()
+        
+        * set reqCreate.source.configurations[0].value = httpConfigs.inputHostname
+        * set reqCreate.source.configurations[1].value = httpConfigs.inputPort
+        * set reqCreate.source.configurations[2].value = httpConfigs.inputUri
+        * set reqCreate.destinations[0].configurations[0].value = httpConfigs.outputHostname
+        * set reqCreate.destinations[0].configurations[1].value = httpConfigs.outputPort
+        * set reqCreate.destinations[0].configurations[2].value = httpConfigs.outputUri
+        * def resCreate =  read('classpath:integration/data-pipeline/invalid-isSecure-value.json')
+
+        Given path '/data-pipelines'
+        And header Authorization = 'Bearer ' + accessToken
+        And request reqCreate
+        When method post
+        Then status 400
+        Then match response == resCreate
+
+@TestHTTP
+ Scenario: Create HTTPS to HTTPS data pipeline that is deployed and it has 2 filters and 2 transformers and get data pipeline resources and delete the pipeline and get that pipeline again.
+
+ * def reqCreate =  read('classpath:integration/data-pipeline/create-request-https-https-deploy-with-FT.json')
+        * set reqCreate.name = "Test-" + now()
+        * set reqCreate.source.name = "Source-" + now()
+        * set reqCreate.destinations[0].name = "Destination-" + now()
+        
+        * set reqCreate.source.configurations[0].value = httpConfigs.inputHostname
+        * set reqCreate.source.configurations[1].value = httpConfigs.inputPort
+        * set reqCreate.source.configurations[2].value = httpConfigs.inputUri
+        * set reqCreate.destinations[0].configurations[0].value = httpConfigs.outputHostname
+        * set reqCreate.destinations[0].configurations[1].value = httpConfigs.outputPort
+        * set reqCreate.destinations[0].configurations[2].value = httpConfigs.outputUri
+        
+        * def tempJSON = read('classpath:integration/data-pipeline/create-response-https-https-deploy-with-FT.json')
+        * def resCreate = read('classpath:integration/data-pipeline/create-response-https-https-deploy-with-FT.json')
+        * def resDeleteNotFound = read('classpath:integration/data-pipeline/delete-response-not-found.json')
+        * def resGetByIdNotFound = read('classpath:integration/data-pipeline/get-response-not-found.json')
+        
+        * set tempJSON.source.configurations[0].value = reqCreate.source.configurations[0].value
+        * set tempJSON.source.configurations[1].value = reqCreate.source.configurations[1].value
+        * set tempJSON.source.configurations[2].value = reqCreate.source.configurations[2].value
+        * set tempJSON.destinations[0].configurations[0].value = reqCreate.destinations[0].configurations[0].value
+        * set tempJSON.destinations[0].configurations[1].value = reqCreate.destinations[0].configurations[1].value
+        * set tempJSON.destinations[0].configurations[2].value = reqCreate.destinations[0].configurations[2].value
+
+        * set resCreate.source.configurations = '#(^^tempJSON.source.configurations)'
+        * set resCreate.source.filters = '#(^^tempJSON.source.filters)'
+        * set resCreate.source.transformers = '#(^^tempJSON.source.transformers)'
+        * set resCreate.destinations[0].configurations = '#(^^tempJSON.destinations[0].configurations)'
+        * set resCreate.destinations[0].filters = '#(^^tempJSON.destinations[0].filters)'
+        * set resCreate.destinations[0].transformers = '#(^^tempJSON.destinations[0].transformers)'
+        * set resCreate.destinations[0].responseTransformers = '#(^^tempJSON.destinations[0].responseTransformers)'
+        * set resCreate.auditMessages = '#(^^tempJSON.auditMessages)'
+ 
+        * set resCreate.name = reqCreate.name
+        * set resCreate.source.name = reqCreate.source.name
+        * set resCreate.destinations[0].name = reqCreate.destinations[0].name
+ 
+
+    Given path '/data-pipelines'
+        And header Authorization = 'Bearer ' + accessToken
+        And request reqCreate
+        When method post
+        Then status 201
+        Then match response == resCreate
+    
+        * def pipelineId = response.id
+        * call sleep 30
+        * set resCreate.state = "STARTED"
+
+    Given path '/data-pipelines/' + pipelineId
+        And header Authorization = 'Bearer ' + accessToken
+        When method get
+        Then status 200
+        Then match response == resCreate
+
+        * def reqUpdateWithNoFT = response
+        * set reqUpdateWithNoFT.source.filters = []
+        * set reqUpdateWithNoFT.source.transformers = []
+        * set reqUpdateWithNoFT.deploy = false
+        * set reqUpdateWithNoFT.state = "STOPPING"
+        * set resCreate.source.filters = []
+        * set resCreate.source.transformers = []
+        * set resCreate.deploy = false
+        * set resCreate.state = "STOPPING"
+
+   Given path '/data-pipelines/'
+        And header Authorization = 'Bearer ' + accessToken
+        And request reqUpdateWithNoFT
+        When method put
+        Then status 200
+        Then match response == resCreate 
+ 
+        * call sleep 30
+        * set resCreate.deploy = false
+        * set resCreate.state = "STOPPED"
+
+   Given path '/data-pipelines/' + pipelineId
+        And header Authorization = 'Bearer ' + accessToken
+        When method get
+        Then status 200
+        Then match response == resCreate
+
+        * def reqUpdateOtherDetails = response
+        * set reqUpdateOtherDetails.name = "Updated_Name-" + now()
+        * set reqUpdateOtherDetails.description = "Updated_Description" + now()
+        * set resCreate.name = reqUpdateOtherDetails.name
+        * set resCreate.description = reqUpdateOtherDetails.description
+
+   Given path '/data-pipelines/'
+        And header Authorization = 'Bearer ' + accessToken
+        And request reqUpdateOtherDetails
+        When method put
+        Then status 200
+        Then match response == resCreate 
+ 
+        * call sleep 30
+
+   Given path '/data-pipelines/' + pipelineId
+        And header Authorization = 'Bearer ' + accessToken
+        When method get
+        Then status 200
+        Then match response == resCreate
+
+        * def reqUpdateSource = response
+        * set reqUpdateSource.source.name = "Updated Source Name"+now()
+        * set reqUpdateSource.source.inDataType = "CSV";
+        * set reqUpdateSource.source.outDataType = "CSV";
+        * set resCreate.source.name = reqUpdateSource.source.name
+        * set resCreate.source.inDataType = reqUpdateSource.source.inDataType;
+        * set resCreate.source.outDataType = reqUpdateSource.source.outDataType;
+
+   Given path '/data-pipelines/'
+        And header Authorization = 'Bearer ' + accessToken
+        And request reqUpdateSource
+        When method put
+        Then status 200
+        Then match response == resCreate 
+ 
+        * call sleep 30
+
+   Given path '/data-pipelines/' + pipelineId
+        And header Authorization = 'Bearer ' + accessToken
+        When method get
+        Then status 200
+        Then match response == resCreate
+
+        * def reqUpdateDestinations = response
+        * set reqUpdateDestinations.destinations[0].name = "Updated Destination Name"+now()
+        * set reqUpdateDestinations.destinations[0].inDataType = "CSV";
+        * set reqUpdateDestinations.destinations[0].outDataType = "CSV";
+        * set resCreate.destinations[0].name = reqUpdateDestinations.destinations[0].name
+        * set resCreate.destinations[0].inDataType = reqUpdateDestinations.destinations[0].inDataType;
+        * set resCreate.destinations[0].outDataType = reqUpdateDestinations.destinations[0].outDataType;
+
+   Given path '/data-pipelines/'
+        And header Authorization = 'Bearer ' + accessToken
+        And request reqUpdateDestinations
+        When method put
+        Then status 200
+        Then match response == resCreate 
+ 
+        * call sleep 30
+
+   Given path '/data-pipelines/' + pipelineId
+        And header Authorization = 'Bearer ' + accessToken
+        When method get
+        Then status 200
+        Then match response == resCreate
+      
+    Given path '/data-pipelines/' + pipelineId
+        And header Authorization = 'Bearer ' + accessToken
+        When method delete
+        Then status 200
+
+    Given path '/data-pipelines/' + pipelineId
+        And header Authorization = 'Bearer ' + accessToken
+        When method get
+        Then status 400
+        Then match response == resGetByIdNotFound
+
+
+@TestHTTP
+ Scenario: Create HTTPS to SFTP data pipeline that is deployed and it has 2 filters and 2 transformers and get data pipeline resources and delete the pipeline and get that pipeline again.
+
+        * def reqCreate =  read('classpath:integration/data-pipeline/create-request-https-sftp-deploy-with-FT.json')
         * set reqCreate.name = "Test-" + now()
         * set reqCreate.source.name = "Source-" + now()
         * set reqCreate.destinations[0].name = "Destination-" + now()
@@ -1065,8 +1450,8 @@ Scenario: Create MLLP to FILE data pipeline that is deployed and it has 2 filter
         * set reqCreate.destinations[0].configurations[4].value = sftpConfigs.outputDirectory
         * set reqCreate.destinations[0].configurations[5].value = sftpConfigs.outputFileName
  
-        * def tempJSON = read('classpath:integration/data-pipeline/create-response-http-sftp-deploy-with-FT.json')
-        * def resCreate = read('classpath:integration/data-pipeline/create-response-http-sftp-deploy-with-FT.json')
+        * def tempJSON = read('classpath:integration/data-pipeline/create-response-https-sftp-deploy-with-FT.json')
+        * def resCreate = read('classpath:integration/data-pipeline/create-response-https-sftp-deploy-with-FT.json')
         * def resDeleteNotFound = read('classpath:integration/data-pipeline/delete-response-not-found.json')
         * def resGetByIdNotFound = read('classpath:integration/data-pipeline/get-response-not-found.json')
         
@@ -1217,9 +1602,9 @@ Scenario: Create MLLP to FILE data pipeline that is deployed and it has 2 filter
         Then match response == resGetByIdNotFound
 
 @TestHTTP
- Scenario: Create HTTP to MLLP data pipeline that is deployed and it has 2 filters and 2 transformers and get data pipeline resources and delete the pipeline and get that pipeline again.
+ Scenario: Create HTTPS to MLLP data pipeline that is deployed and it has 2 filters and 2 transformers and get data pipeline resources and delete the pipeline and get that pipeline again.
 
-        * def reqCreate =  read('classpath:integration/data-pipeline/create-request-http-mllp-deploy-with-FT.json')
+        * def reqCreate =  read('classpath:integration/data-pipeline/create-request-https-mllp-deploy-with-FT.json')
         * set reqCreate.name = "Test-" + now()
         * set reqCreate.source.name = "Source-" + now()
         * set reqCreate.destinations[0].name = "Destination-" + now()
@@ -1230,8 +1615,8 @@ Scenario: Create MLLP to FILE data pipeline that is deployed and it has 2 filter
         * set reqCreate.destinations[0].configurations[0].value = mllpConfigs.outputHostname
         * set reqCreate.destinations[0].configurations[1].value = mllpConfigs.outputPort
  
-        * def tempJSON = read('classpath:integration/data-pipeline/create-response-http-mllp-deploy-with-FT.json')
-        * def resCreate = read('classpath:integration/data-pipeline/create-response-http-mllp-deploy-with-FT.json')
+        * def tempJSON = read('classpath:integration/data-pipeline/create-response-https-mllp-deploy-with-FT.json')
+        * def resCreate = read('classpath:integration/data-pipeline/create-response-https-mllp-deploy-with-FT.json')
         * def resDeleteNotFound = read('classpath:integration/data-pipeline/delete-response-not-found.json')
         * def resGetByIdNotFound = read('classpath:integration/data-pipeline/get-response-not-found.json')
         
@@ -1872,6 +2257,169 @@ Scenario: Create MLLP to FILE data pipeline that is deployed and it has 2 filter
         Then status 400
         Then match response == resGetByIdNotFound
 
+
+@TestMLLP
+ Scenario: Create MLLP to HTTPS data pipeline that is deployed and it has 2 filters and 2 transformers and get data pipeline resources and delete the pipeline and get that pipeline again.
+
+        * def reqCreate =  read('classpath:integration/data-pipeline/create-request-mllp-https-deploy-with-FT.json')
+        * set reqCreate.name = "Test-" + now()
+        * set reqCreate.source.name = "Source-" + now()
+        * set reqCreate.destinations[0].name = "Destination-" + now()
+        
+        * set reqCreate.source.configurations[0].value = mllpConfigs.inputHostname
+        * set reqCreate.source.configurations[1].value = mllpConfigs.inputPort
+        * set reqCreate.destinations[0].configurations[0].value = httpConfigs.outputHostname
+        * set reqCreate.destinations[0].configurations[1].value = httpConfigs.outputPort
+        * set reqCreate.destinations[0].configurations[2].value = httpConfigs.outputUri
+ 
+        * def tempJSON = read('classpath:integration/data-pipeline/create-response-mllp-https-deploy-with-FT.json')
+        * def resCreate = read('classpath:integration/data-pipeline/create-response-mllp-https-deploy-with-FT.json')
+        * def resDeleteNotFound = read('classpath:integration/data-pipeline/delete-response-not-found.json')
+        * def resGetByIdNotFound = read('classpath:integration/data-pipeline/get-response-not-found.json')
+        
+        * set tempJSON.source.configurations[0].value = reqCreate.source.configurations[0].value
+        * set tempJSON.source.configurations[1].value = reqCreate.source.configurations[1].value
+        * set tempJSON.destinations[0].configurations[0].value = reqCreate.destinations[0].configurations[0].value
+        * set tempJSON.destinations[0].configurations[1].value = reqCreate.destinations[0].configurations[1].value
+        * set tempJSON.destinations[0].configurations[2].value = reqCreate.destinations[0].configurations[2].value
+
+        * set resCreate.source.configurations = '#(^^tempJSON.source.configurations)'
+        * set resCreate.source.filters = '#(^^tempJSON.source.filters)'
+        * set resCreate.source.transformers = '#(^^tempJSON.source.transformers)'
+        * set resCreate.destinations[0].configurations = '#(^^tempJSON.destinations[0].configurations)'
+        * set resCreate.destinations[0].filters = '#(^^tempJSON.destinations[0].filters)'
+        * set resCreate.destinations[0].transformers = '#(^^tempJSON.destinations[0].transformers)'
+        * set resCreate.destinations[0].responseTransformers = '#(^^tempJSON.destinations[0].responseTransformers)'
+        * set resCreate.auditMessages = '#(^^tempJSON.auditMessages)'
+ 
+        * set resCreate.name = reqCreate.name
+        * set resCreate.source.name = reqCreate.source.name
+        * set resCreate.destinations[0].name = reqCreate.destinations[0].name
+ 
+
+    Given path '/data-pipelines'
+        And header Authorization = 'Bearer ' + accessToken
+        And request reqCreate
+        When method post
+        Then status 201
+        Then match response == resCreate
+    
+        * def pipelineId = response.id
+        * call sleep 30
+        * set resCreate.state = "STARTED"
+
+    Given path '/data-pipelines/' + pipelineId
+        And header Authorization = 'Bearer ' + accessToken
+        When method get
+        Then status 200
+        Then match response == resCreate
+
+        * def reqUpdateWithNoFT = response
+        * set reqUpdateWithNoFT.source.filters = []
+        * set reqUpdateWithNoFT.source.transformers = []
+        * set reqUpdateWithNoFT.deploy = false
+        * set reqUpdateWithNoFT.state = "STOPPING"
+        * set resCreate.source.filters = []
+        * set resCreate.source.transformers = []
+        * set resCreate.deploy = false
+        * set resCreate.state = "STOPPING"
+
+   Given path '/data-pipelines/'
+        And header Authorization = 'Bearer ' + accessToken
+        And request reqUpdateWithNoFT
+        When method put
+        Then status 200
+        Then match response == resCreate 
+ 
+        * call sleep 30
+        * set resCreate.deploy = false
+        * set resCreate.state = "STOPPED"
+
+   Given path '/data-pipelines/' + pipelineId
+        And header Authorization = 'Bearer ' + accessToken
+        When method get
+        Then status 200
+        Then match response == resCreate
+
+        * def reqUpdateOtherDetails = response
+        * set reqUpdateOtherDetails.name = "Updated_Name-" + now()
+        * set reqUpdateOtherDetails.description = "Updated_Description" + now()
+        * set resCreate.name = reqUpdateOtherDetails.name
+        * set resCreate.description = reqUpdateOtherDetails.description
+
+   Given path '/data-pipelines/'
+        And header Authorization = 'Bearer ' + accessToken
+        And request reqUpdateOtherDetails
+        When method put
+        Then status 200
+        Then match response == resCreate 
+ 
+        * call sleep 30
+
+   Given path '/data-pipelines/' + pipelineId
+        And header Authorization = 'Bearer ' + accessToken
+        When method get
+        Then status 200
+        Then match response == resCreate
+
+        * def reqUpdateSource = response
+        * set reqUpdateSource.source.name = "Updated Source Name"+now()
+        * set reqUpdateSource.source.inDataType = "CSV";
+        * set reqUpdateSource.source.outDataType = "CSV";
+        * set resCreate.source.name = reqUpdateSource.source.name
+        * set resCreate.source.inDataType = reqUpdateSource.source.inDataType;
+        * set resCreate.source.outDataType = reqUpdateSource.source.outDataType;
+
+   Given path '/data-pipelines/'
+        And header Authorization = 'Bearer ' + accessToken
+        And request reqUpdateSource
+        When method put
+        Then status 200
+        Then match response == resCreate 
+ 
+        * call sleep 30
+
+   Given path '/data-pipelines/' + pipelineId
+        And header Authorization = 'Bearer ' + accessToken
+        When method get
+        Then status 200
+        Then match response == resCreate
+
+        * def reqUpdateDestinations = response
+        * set reqUpdateDestinations.destinations[0].name = "Updated Destination Name"+now()
+        * set reqUpdateDestinations.destinations[0].inDataType = "CSV";
+        * set reqUpdateDestinations.destinations[0].outDataType = "CSV";
+        * set resCreate.destinations[0].name = reqUpdateDestinations.destinations[0].name
+        * set resCreate.destinations[0].inDataType = reqUpdateDestinations.destinations[0].inDataType;
+        * set resCreate.destinations[0].outDataType = reqUpdateDestinations.destinations[0].outDataType;
+
+   Given path '/data-pipelines/'
+        And header Authorization = 'Bearer ' + accessToken
+        And request reqUpdateDestinations
+        When method put
+        Then status 200
+        Then match response == resCreate 
+ 
+        * call sleep 30
+
+   Given path '/data-pipelines/' + pipelineId
+        And header Authorization = 'Bearer ' + accessToken
+        When method get
+        Then status 200
+        Then match response == resCreate
+      
+    Given path '/data-pipelines/' + pipelineId
+        And header Authorization = 'Bearer ' + accessToken
+        When method delete
+        Then status 200
+
+    Given path '/data-pipelines/' + pipelineId
+        And header Authorization = 'Bearer ' + accessToken
+        When method get
+        Then status 400
+        Then match response == resGetByIdNotFound
+
+
 @TestMLLP
  Scenario: Create MLLP to MLLP data pipeline that is deployed and it has 2 filters and 2 transformers and get data pipeline resources and delete the pipeline and get that pipeline again.
 
@@ -2031,6 +2579,7 @@ Scenario: Create MLLP to FILE data pipeline that is deployed and it has 2 filter
         Then status 400
         Then match response == resGetByIdNotFound
 
+
 @TestSFTP
  Scenario: Create SFTP to SFTP data pipeline that is deployed and it has 2 filters and 2 transformers and get data pipeline resources and delete the pipeline and get that pipeline again.
 
@@ -2092,7 +2641,7 @@ Scenario: Create MLLP to FILE data pipeline that is deployed and it has 2 filter
         Then match response == resCreate
     
         * def pipelineId = response.id
-        * call sleep 60
+        * call sleep 120
         * set resCreate.state = "STARTED"
 
     Given path '/data-pipelines/' + pipelineId
@@ -2118,7 +2667,7 @@ Scenario: Create MLLP to FILE data pipeline that is deployed and it has 2 filter
         Then status 200
         Then match response == resCreate 
  
-        * call sleep 60
+        * call sleep 240
         * set resCreate.deploy = false
         * set resCreate.state = "STOPPED"
 
@@ -2141,7 +2690,7 @@ Scenario: Create MLLP to FILE data pipeline that is deployed and it has 2 filter
         Then status 200
         Then match response == resCreate 
  
-        * call sleep 60
+        * call sleep 120
 
    Given path '/data-pipelines/' + pipelineId
         And header Authorization = 'Bearer ' + accessToken
@@ -2164,7 +2713,7 @@ Scenario: Create MLLP to FILE data pipeline that is deployed and it has 2 filter
         Then status 200
         Then match response == resCreate 
  
-        * call sleep 60
+        * call sleep 120
 
    Given path '/data-pipelines/' + pipelineId
         And header Authorization = 'Bearer ' + accessToken
@@ -2187,7 +2736,7 @@ Scenario: Create MLLP to FILE data pipeline that is deployed and it has 2 filter
         Then status 200
         Then match response == resCreate 
  
-        * call sleep 60
+        * call sleep 120
 
    Given path '/data-pipelines/' + pipelineId
         And header Authorization = 'Bearer ' + accessToken
@@ -2259,7 +2808,7 @@ Scenario: Create MLLP to FILE data pipeline that is deployed and it has 2 filter
         Then match response == resCreate
     
         * def pipelineId = response.id
-        * call sleep 30
+        * call sleep 120
         * set resCreate.state = "STARTED"
 
     Given path '/data-pipelines/' + pipelineId
@@ -2285,7 +2834,7 @@ Scenario: Create MLLP to FILE data pipeline that is deployed and it has 2 filter
         Then status 200
         Then match response == resCreate 
  
-        * call sleep 30
+        * call sleep 240
         * set resCreate.deploy = false
         * set resCreate.state = "STOPPED"
 
@@ -2308,7 +2857,7 @@ Scenario: Create MLLP to FILE data pipeline that is deployed and it has 2 filter
         Then status 200
         Then match response == resCreate 
  
-        * call sleep 30
+        * call sleep 120
 
    Given path '/data-pipelines/' + pipelineId
         And header Authorization = 'Bearer ' + accessToken
@@ -2331,7 +2880,7 @@ Scenario: Create MLLP to FILE data pipeline that is deployed and it has 2 filter
         Then status 200
         Then match response == resCreate 
  
-        * call sleep 30
+        * call sleep 120
 
    Given path '/data-pipelines/' + pipelineId
         And header Authorization = 'Bearer ' + accessToken
@@ -2354,7 +2903,7 @@ Scenario: Create MLLP to FILE data pipeline that is deployed and it has 2 filter
         Then status 200
         Then match response == resCreate 
  
-        * call sleep 30
+        * call sleep 120
 
    Given path '/data-pipelines/' + pipelineId
         And header Authorization = 'Bearer ' + accessToken
@@ -2426,7 +2975,7 @@ Scenario: Create MLLP to FILE data pipeline that is deployed and it has 2 filter
         Then match response == resCreate
     
         * def pipelineId = response.id
-        * call sleep 30
+        * call sleep 120
         * set resCreate.state = "STARTED"
 
     Given path '/data-pipelines/' + pipelineId
@@ -2452,7 +3001,7 @@ Scenario: Create MLLP to FILE data pipeline that is deployed and it has 2 filter
         Then status 200
         Then match response == resCreate 
  
-        * call sleep 30
+        * call sleep 240
         * set resCreate.deploy = false
         * set resCreate.state = "STOPPED"
 
@@ -2475,7 +3024,7 @@ Scenario: Create MLLP to FILE data pipeline that is deployed and it has 2 filter
         Then status 200
         Then match response == resCreate 
  
-        * call sleep 30
+        * call sleep 120
 
    Given path '/data-pipelines/' + pipelineId
         And header Authorization = 'Bearer ' + accessToken
@@ -2498,7 +3047,7 @@ Scenario: Create MLLP to FILE data pipeline that is deployed and it has 2 filter
         Then status 200
         Then match response == resCreate 
  
-        * call sleep 30
+        * call sleep 120
 
    Given path '/data-pipelines/' + pipelineId
         And header Authorization = 'Bearer ' + accessToken
@@ -2521,7 +3070,7 @@ Scenario: Create MLLP to FILE data pipeline that is deployed and it has 2 filter
         Then status 200
         Then match response == resCreate 
  
-        * call sleep 30
+        * call sleep 120
 
    Given path '/data-pipelines/' + pipelineId
         And header Authorization = 'Bearer ' + accessToken
@@ -2596,7 +3145,7 @@ Scenario: Create MLLP to FILE data pipeline that is deployed and it has 2 filter
         
     
         * def pipelineId = response.id
-        * call sleep 30
+        * call sleep 120
         * set resCreate.state = "STARTED"
 
     Given path '/data-pipelines/' + pipelineId
@@ -2622,7 +3171,7 @@ Scenario: Create MLLP to FILE data pipeline that is deployed and it has 2 filter
         Then status 200
         Then match response == resCreate 
  
-        * call sleep 30
+        * call sleep 240
         * set resCreate.deploy = false
         * set resCreate.state = "STOPPED"
 
@@ -2645,7 +3194,7 @@ Scenario: Create MLLP to FILE data pipeline that is deployed and it has 2 filter
         Then status 200
         Then match response == resCreate 
  
-        * call sleep 30
+        * call sleep 120
 
    Given path '/data-pipelines/' + pipelineId
         And header Authorization = 'Bearer ' + accessToken
@@ -2668,7 +3217,7 @@ Scenario: Create MLLP to FILE data pipeline that is deployed and it has 2 filter
         Then status 200
         Then match response == resCreate 
  
-        * call sleep 30
+        * call sleep 120
 
    Given path '/data-pipelines/' + pipelineId
         And header Authorization = 'Bearer ' + accessToken
@@ -2691,7 +3240,177 @@ Scenario: Create MLLP to FILE data pipeline that is deployed and it has 2 filter
         Then status 200
         Then match response == resCreate 
  
-        * call sleep 30
+        * call sleep 120
+
+   Given path '/data-pipelines/' + pipelineId
+        And header Authorization = 'Bearer ' + accessToken
+        When method get
+        Then status 200
+        Then match response == resCreate
+      
+    Given path '/data-pipelines/' + pipelineId
+        And header Authorization = 'Bearer ' + accessToken
+        When method delete
+        Then status 200
+
+    Given path '/data-pipelines/' + pipelineId
+        And header Authorization = 'Bearer ' + accessToken
+        When method get
+        Then status 400
+        Then match response == resGetByIdNotFound
+
+@TestSFTP
+ Scenario: Create SFTP to HTTPS data pipeline that is deployed and it has 2 filters and 2 transformers and get data pipeline resources and delete the pipeline and get that pipeline again.
+
+        * def reqCreate =  read('classpath:integration/data-pipeline/create-request-sftp-https-deploy-with-FT.json')
+        * set reqCreate.name = "Test-" + now()
+        * set reqCreate.source.name = "Source-" + now()
+        * set reqCreate.destinations[0].name = "Destination-" + now()
+        
+        * set reqCreate.source.configurations[0].value = sftpConfigs.inputHostname
+        * set reqCreate.source.configurations[1].value = sftpConfigs.inputPort
+        * set reqCreate.source.configurations[2].value = sftpConfigs.inputUsername
+        * set reqCreate.source.configurations[3].value = sftpConfigs.inputPassword
+        * set reqCreate.source.configurations[4].value = sftpConfigs.inputDirectory
+        * set reqCreate.source.configurations[5].value = sftpConfigs.inputFileName
+        * set reqCreate.destinations[0].configurations[0].value = httpConfigs.outputHostname
+        * set reqCreate.destinations[0].configurations[1].value = httpConfigs.outputPort
+        * set reqCreate.destinations[0].configurations[2].value = httpConfigs.outputUri
+ 
+        * def tempJSON = read('classpath:integration/data-pipeline/create-response-sftp-https-deploy-with-FT.json')
+        * def resCreate = read('classpath:integration/data-pipeline/create-response-sftp-https-deploy-with-FT.json')
+        * def resDeleteNotFound = read('classpath:integration/data-pipeline/delete-response-not-found.json')
+        * def resGetByIdNotFound = read('classpath:integration/data-pipeline/get-response-not-found.json')
+        
+        * set tempJSON.source.configurations[0].value = reqCreate.source.configurations[0].value
+        * set tempJSON.source.configurations[1].value = reqCreate.source.configurations[1].value
+        * set tempJSON.source.configurations[2].value = reqCreate.source.configurations[2].value
+        * set tempJSON.source.configurations[3].value = reqCreate.source.configurations[3].value
+        * set tempJSON.source.configurations[4].value = reqCreate.source.configurations[4].value
+        * set tempJSON.source.configurations[5].value = reqCreate.source.configurations[5].value
+        * set tempJSON.destinations[0].configurations[0].value = reqCreate.destinations[0].configurations[0].value
+        * set tempJSON.destinations[0].configurations[1].value = reqCreate.destinations[0].configurations[1].value
+        * set tempJSON.destinations[0].configurations[2].value = reqCreate.destinations[0].configurations[2].value
+
+        * set resCreate.source.configurations = '#(^^tempJSON.source.configurations)'
+        * set resCreate.source.filters = '#(^^tempJSON.source.filters)'
+        * set resCreate.source.transformers = '#(^^tempJSON.source.transformers)'
+        * set resCreate.destinations[0].configurations = '#(^^tempJSON.destinations[0].configurations)'
+        * set resCreate.destinations[0].filters = '#(^^tempJSON.destinations[0].filters)'
+        * set resCreate.destinations[0].transformers = '#(^^tempJSON.destinations[0].transformers)'
+        * set resCreate.destinations[0].responseTransformers = '#(^^tempJSON.destinations[0].responseTransformers)'
+        * set resCreate.auditMessages = '#(^^tempJSON.auditMessages)'
+ 
+        * set resCreate.name = reqCreate.name
+        * set resCreate.source.name = reqCreate.source.name
+        * set resCreate.destinations[0].name = reqCreate.destinations[0].name
+ 
+
+    Given path '/data-pipelines'
+        And header Authorization = 'Bearer ' + accessToken
+        And request reqCreate
+        When method post
+        Then status 201
+        Then match response == resCreate
+        
+    
+        * def pipelineId = response.id
+        * call sleep 120
+        * set resCreate.state = "STARTED"
+
+    Given path '/data-pipelines/' + pipelineId
+        And header Authorization = 'Bearer ' + accessToken
+        When method get
+        Then status 200
+        Then match response == resCreate
+
+        * def reqUpdateWithNoFT = response
+        * set reqUpdateWithNoFT.source.filters = []
+        * set reqUpdateWithNoFT.source.transformers = []
+        * set reqUpdateWithNoFT.deploy = false
+        * set reqUpdateWithNoFT.state = "STOPPING"
+        * set resCreate.source.filters = []
+        * set resCreate.source.transformers = []
+        * set resCreate.deploy = false
+        * set resCreate.state = "STOPPING"
+
+   Given path '/data-pipelines/'
+        And header Authorization = 'Bearer ' + accessToken
+        And request reqUpdateWithNoFT
+        When method put
+        Then status 200
+        Then match response == resCreate 
+ 
+        * call sleep 240
+        * set resCreate.deploy = false
+        * set resCreate.state = "STOPPED"
+
+   Given path '/data-pipelines/' + pipelineId
+        And header Authorization = 'Bearer ' + accessToken
+        When method get
+        Then status 200
+        Then match response == resCreate
+
+        * def reqUpdateOtherDetails = response
+        * set reqUpdateOtherDetails.name = "Updated_Name-" + now()
+        * set reqUpdateOtherDetails.description = "Updated_Description" + now()
+        * set resCreate.name = reqUpdateOtherDetails.name
+        * set resCreate.description = reqUpdateOtherDetails.description
+
+   Given path '/data-pipelines/'
+        And header Authorization = 'Bearer ' + accessToken
+        And request reqUpdateOtherDetails
+        When method put
+        Then status 200
+        Then match response == resCreate 
+ 
+        * call sleep 120
+
+   Given path '/data-pipelines/' + pipelineId
+        And header Authorization = 'Bearer ' + accessToken
+        When method get
+        Then status 200
+        Then match response == resCreate
+
+        * def reqUpdateSource = response
+        * set reqUpdateSource.source.name = "Updated Source Name"+now()
+        * set reqUpdateSource.source.inDataType = "CSV";
+        * set reqUpdateSource.source.outDataType = "CSV";
+        * set resCreate.source.name = reqUpdateSource.source.name
+        * set resCreate.source.inDataType = reqUpdateSource.source.inDataType;
+        * set resCreate.source.outDataType = reqUpdateSource.source.outDataType;
+
+   Given path '/data-pipelines/'
+        And header Authorization = 'Bearer ' + accessToken
+        And request reqUpdateSource
+        When method put
+        Then status 200
+        Then match response == resCreate 
+ 
+        * call sleep 120
+
+   Given path '/data-pipelines/' + pipelineId
+        And header Authorization = 'Bearer ' + accessToken
+        When method get
+        Then status 200
+        Then match response == resCreate
+
+        * def reqUpdateDestinations = response
+        * set reqUpdateDestinations.destinations[0].name = "Updated Destination Name"+now()
+        * set reqUpdateDestinations.destinations[0].inDataType = "CSV";
+        * set reqUpdateDestinations.destinations[0].outDataType = "CSV";
+        * set resCreate.destinations[0].name = reqUpdateDestinations.destinations[0].name
+        * set resCreate.destinations[0].inDataType = reqUpdateDestinations.destinations[0].inDataType;
+        * set resCreate.destinations[0].outDataType = reqUpdateDestinations.destinations[0].outDataType;
+
+   Given path '/data-pipelines/'
+        And header Authorization = 'Bearer ' + accessToken
+        And request reqUpdateDestinations
+        When method put
+        Then status 200
+        Then match response == resCreate 
+ 
+        * call sleep 120
 
    Given path '/data-pipelines/' + pipelineId
         And header Authorization = 'Bearer ' + accessToken
@@ -2715,6 +3434,30 @@ Scenario: Create data pipeline - validate for blank hostname in Source
         Given path '/data-pipelines'
         And header Authorization = 'Bearer ' + accessToken
         And request read('classpath:integration/data-pipeline/create-request-source-config-hostname.json')
+        When method post
+        Then status 400
+
+@Validation
+Scenario: Create data pipeline - validate for blank data pipeline name
+        Given path '/data-pipelines'
+        And header Authorization = 'Bearer ' + accessToken
+        And request read('classpath:integration/data-pipeline/create-request-config-datapipelinename.json')
+        When method post
+        Then status 400
+
+@Validation
+Scenario: Create data pipeline - validate for blank source name
+        Given path '/data-pipelines'
+        And header Authorization = 'Bearer ' + accessToken
+        And request read('classpath:integration/data-pipeline/create-request-config-sourcename.json')
+        When method post
+        Then status 400
+
+@Validation
+Scenario: Create data pipeline - validate for blank destination name
+        Given path '/data-pipelines'
+        And header Authorization = 'Bearer ' + accessToken
+        And request read('classpath:integration/data-pipeline/create-request-config-destinationname.json')
         When method post
         Then status 400
         
@@ -2926,6 +3669,16 @@ Scenario: Update the deployed pipeline.
         And header Authorization = 'Bearer ' + accessToken
         When method delete
         Then status 200
+
+@Validation
+Scenario: Validate duplicate source and destination names for HTTP data pipelines
+
+     Given path '/data-pipelines'
+     And header Authorization = 'Bearer ' + accessToken
+     And request read('classpath:integration/data-pipeline/same_endpoint_for_source_destination.json')
+     When method post
+     Then status 400
+     Then match response.message contains "error.duplicate.source.destination.endpoint"
 
 @Import
 Scenario: Import the undeployed pipelines with filters and transformers.

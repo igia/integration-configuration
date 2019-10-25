@@ -55,7 +55,12 @@
             {
                 "key": "resourceUri",
                 "value": "/medical-records"
+            },
+            {
+                "key":"isSecure",
+                "value" : "false"
             }
+
         ],
         "filters" : [ {
             "order" : 0,

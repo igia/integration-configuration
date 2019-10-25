@@ -12,17 +12,16 @@
  */
 package io.igia.integration.configuration.service.impl;
 
+import io.igia.integration.configuration.service.EndpointMetadataService;
+import io.igia.integration.configuration.domain.EndpointMetadata;
+import io.igia.integration.configuration.repository.EndpointMetadataRepository;
+import io.igia.integration.configuration.service.dto.EndpointMetadataDTO;
+import io.igia.integration.configuration.service.mapper.EndpointMetadataMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import io.igia.integration.configuration.domain.EndpointMetadata;
-import io.igia.integration.configuration.repository.EndpointMetadataRepository;
-import io.igia.integration.configuration.service.EndpointMetadataService;
-import io.igia.integration.configuration.service.dto.EndpointMetadataDTO;
-import io.igia.integration.configuration.service.mapper.EndpointMetadataMapper;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -30,7 +29,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * Service Implementation for managing EndpointMetadata.
+ * Service Implementation for managing {@link EndpointMetadata}.
  */
 @Service
 @Transactional
@@ -42,8 +41,7 @@ public class EndpointMetadataServiceImpl implements EndpointMetadataService {
 
     private final EndpointMetadataMapper endpointMetadataMapper;
 
-    public EndpointMetadataServiceImpl(EndpointMetadataRepository endpointMetadataRepository,
-            EndpointMetadataMapper endpointMetadataMapper) {
+    public EndpointMetadataServiceImpl(EndpointMetadataRepository endpointMetadataRepository, EndpointMetadataMapper endpointMetadataMapper) {
         this.endpointMetadataRepository = endpointMetadataRepository;
         this.endpointMetadataMapper = endpointMetadataMapper;
     }
@@ -51,14 +49,12 @@ public class EndpointMetadataServiceImpl implements EndpointMetadataService {
     /**
      * Save a endpointMetadata.
      *
-     * @param endpointMetadataDTO
-     *            the entity to save
-     * @return the persisted entity
+     * @param endpointMetadataDTO the entity to save.
+     * @return the persisted entity.
      */
     @Override
     public EndpointMetadataDTO save(EndpointMetadataDTO endpointMetadataDTO) {
         log.info("Request to save EndpointMetadata : {}", endpointMetadataDTO);
-
         EndpointMetadata endpointMetadata = endpointMetadataMapper.toEntity(endpointMetadataDTO);
         endpointMetadata = endpointMetadataRepository.save(endpointMetadata);
         return endpointMetadataMapper.toDto(endpointMetadata);
@@ -67,34 +63,35 @@ public class EndpointMetadataServiceImpl implements EndpointMetadataService {
     /**
      * Get all the endpointMetadata.
      *
-     * @return the list of entities
+     * @return the list of entities.
      */
     @Override
     @Transactional(readOnly = true)
     public List<EndpointMetadataDTO> findAll() {
-        return endpointMetadataRepository.findAll().stream().map(endpointMetadataMapper::toDto)
-                .collect(Collectors.toCollection(LinkedList::new));
+        return endpointMetadataRepository.findAll().stream()
+            .map(endpointMetadataMapper::toDto)
+            .collect(Collectors.toCollection(LinkedList::new));
     }
+
 
     /**
      * Get one endpointMetadata by id.
      *
-     * @param id
-     *            the id of the entity
-     * @return the entity
+     * @param id the id of the entity.
+     * @return the entity.
      */
     @Override
     @Transactional(readOnly = true)
     public Optional<EndpointMetadataDTO> findOne(Long id) {
         log.info("Request to get EndpointMetadata : {}", id);
-        return endpointMetadataRepository.findById(id).map(endpointMetadataMapper::toDto);
+        return endpointMetadataRepository.findById(id)
+            .map(endpointMetadataMapper::toDto);
     }
 
     /**
      * Delete the endpointMetadata by id.
      *
-     * @param id
-     *            the id of the entity
+     * @param id the id of the entity.
      */
     @Override
     public void delete(Long id) {
@@ -103,21 +100,20 @@ public class EndpointMetadataServiceImpl implements EndpointMetadataService {
     }
 
     @Override
-    public List<EndpointMetadataDTO> findAllByTypeAndCategoryAndIsMandatory(String type, String category,
-            boolean isMandatory) {
-        log.info("Request to get EndpointMetadata with Type : {} , Category : {} , Mandatory : {}",type,category,isMandatory);
+    public List<EndpointMetadataDTO> findAllByTypeAndCategoryAndIsEncrypted(String type, String category, boolean isEncrypted) {
+        log.info("Request to get EndpointMetadata with Type : {} , Category : {} , Encrypted : {}",type,category,isEncrypted);
         List<EndpointMetadata> endpointMetadata = endpointMetadataRepository
-                .findAllByTypeAndCategoryAndIsMandatory(type, category, isMandatory);
+                .findAllByTypeAndCategoryAndIsEncrypted(type, category, isEncrypted);
         return endpointMetadata.stream().map(endpointMetadataMapper::toDto)
                 .collect(Collectors.toCollection(LinkedList::new));
     }
 
     @Override
-    public List<EndpointMetadataDTO> findAllByTypeAndCategoryAndIsEncrypted(String type, String category,
-            boolean isEncrypted) {
-        log.info("Request to get EndpointMetadata with Type : {} , Category : {} , Encrypted : {}",type,category,isEncrypted);
+    public List<EndpointMetadataDTO> findAllByTypeAndCategoryAndIsMandatory(String type, String category,
+            boolean isMandatory) {
+        log.info("Request to get EndpointMetadata with Type : {} , Category : {} , Mandatory : {}",type,category,isMandatory);
         List<EndpointMetadata> endpointMetadata = endpointMetadataRepository
-                .findAllByTypeAndCategoryAndIsEncrypted(type, category, isEncrypted);
+                .findAllByTypeAndCategoryAndIsMandatory(type, category, isMandatory);
         return endpointMetadata.stream().map(endpointMetadataMapper::toDto)
                 .collect(Collectors.toCollection(LinkedList::new));
     }

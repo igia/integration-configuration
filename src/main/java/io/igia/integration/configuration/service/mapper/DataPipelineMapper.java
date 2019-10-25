@@ -12,15 +12,15 @@
  */
 package io.igia.integration.configuration.service.mapper;
 
-import org.mapstruct.*;
-
 import io.igia.integration.configuration.domain.*;
 import io.igia.integration.configuration.service.dto.DataPipelineDTO;
 
+import org.mapstruct.*;
+
 /**
- * Mapper for the entity DataPipeline and its DTO DataPipelineDTO.
+ * Mapper for the entity {@link DataPipeline} and its DTO {@link DataPipelineDTO}.
  */
-@Mapper(componentModel = "spring", uses = {SourceEndpointMapper.class})
+@Mapper(componentModel = "spring", uses = {EndpointMapper.class})
 public interface DataPipelineMapper extends EntityMapper<DataPipelineDTO, DataPipeline> {
 
     DataPipelineDTO toDto(DataPipeline dataPipeline);

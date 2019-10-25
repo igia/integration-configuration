@@ -1,0 +1,66 @@
+{
+    "name": "Endpoint",
+    "fields": [
+        {
+            "fieldName": "type",
+            "fieldType": "EndpointType",
+            "fieldValues": "MLLP,FILE,HTTP,SFTP"
+        },
+        {
+            "fieldName": "name",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "inDataType",
+            "fieldType": "InDataType",
+            "fieldValues": "HL7_V2,JSON,CSV,RAW"
+        },
+        {
+            "fieldName": "outDataType",
+            "fieldType": "OutDataType",
+            "fieldValues": "HL7_V2,JSON,CSV,RAW"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipName": "dataPipeline",
+            "otherEntityName": "dataPipeline",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "filter",
+            "otherEntityRelationshipName": "endpoint",
+            "relationshipName": "filter"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "transformer",
+            "otherEntityRelationshipName": "endpoint",
+            "relationshipName": "transformer"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "endpointConfig",
+            "otherEntityRelationshipName": "endpoint",
+            "relationshipName": "configuration"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "responseTransformer",
+            "otherEntityRelationshipName": "endpoint",
+            "relationshipName": "responseTransformer"
+        }
+    ],
+    "changelogDate": "20190807132726",
+    "entityTableName": "endpoint",
+    "dto": "mapstruct",
+    "pagination": "no",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "integrationconfiguration",
+    "applications": "*",
+    "microserviceName": "integrationconfiguration"
+}

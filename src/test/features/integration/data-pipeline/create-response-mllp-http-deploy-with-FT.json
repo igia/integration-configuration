@@ -71,7 +71,11 @@
             "id" : "#number",
             "key": "resourceUri",
             "value": "/patient-info"
-        } ],
+        }, {
+                "id" : "#number",
+                "key": "isSecure",
+                "value": "false"
+        }  ],
         "filters" : [ {
             "id" : "#number",
             "order" : 0,
