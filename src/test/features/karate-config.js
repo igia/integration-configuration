@@ -7,7 +7,7 @@ function() {
   }
   
   var fileConfigs = {
-      inputDirectoryPath: 'mnt/igia/input',
+      inputDirectoryPath: 'mnt/igia',
       inputFileName: 'a01.txt',
       inputCSVFileName: 'data_001.csv',
       inputHL7FileName: 'a01.hl7',
@@ -18,17 +18,17 @@ function() {
   }
   
   var sftpConfigs = {
-      inputHostname: 'localhost',
+      inputHostname: 'integration-app-sftp',
       inputPort: '22',
-      inputUsername: 'username',
-      inputPassword: 'password',
-      inputDirectory: 'public/integration',
+      inputUsername: 'igia',
+      inputPassword: 'integration',
+      inputDirectory: '/home/igia/sftp-input',
       inputFileName: 'test.csv',
-      outputHostname: 'localhost',
+      outputHostname: 'integration-app-sftp',
       outputPort: '22',
-      outputUsername: 'username',
-      outputPassword: 'password',
-      outputDirectory: 'public/integration',
+      outputUsername: 'igia',
+      outputPassword: 'integration',
+      outputDirectory: '/home/igia/sftp-output',
       outputFileName: 'test_output.csv'
   }
   
